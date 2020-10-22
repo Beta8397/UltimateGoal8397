@@ -43,7 +43,7 @@ public class TestImageFileOutput extends LoggingLinearOpMode {
     WebcamName webcamName = null;
 
     @Override
-    public void runLoggingOpmode() {
+    public void runLoggingOpMode() {
 
         while (!opModeIsActive() && !isStopRequested()) {
             if (toggleB.update()) useWebCam = !useWebCam;

@@ -23,7 +23,7 @@ public class WebcamTester extends LoggingLinearOpMode {
     WebcamName webcamName;
 
     @Override
-    public void runLoggingOpmode() throws InterruptedException {
+    public void runLoggingOpMode() throws InterruptedException {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         VuforiaNavigator.activate(null, webcamName);
 

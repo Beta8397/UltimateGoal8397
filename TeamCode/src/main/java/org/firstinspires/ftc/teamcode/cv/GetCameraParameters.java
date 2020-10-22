@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class GetCameraParameters extends LoggingLinearOpMode {
 
     @Override
-    public void runLoggingOpmode() {
+    public void runLoggingOpMode() {
 
         VuforiaNavigator.activate(null, null, null, VuforiaLocalizer.CameraDirection.BACK, null);
         float[] fovRad = CameraDevice.getInstance().getCameraCalibration().getFieldOfViewRads().getData();

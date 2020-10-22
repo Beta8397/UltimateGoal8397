@@ -94,11 +94,9 @@ public class VuforiaNavigator {
         } else {
             parameters.cameraName = webcamName;
         }
+
         //New key that supports webcams
         parameters.vuforiaLicenseKey = "AUtJ5mz/////AAABmXtx1srReUwRul4uxKENSBMhHVKlyScXHgWkruUT2XRTBrAtPCMF9prCnx7veiSump9zgStSi56lMez7tp8dg56fvi1uO5H2kUkyB2ZUOrPfwWkMKNJ720ldj1nBT1o+svQVIfEE1VSyRqekf7iEvsFpMAtKQ4PQQ2Ud83/lgiOarkzG0oD7RziDERQxN0Dq2Yk1+vF5VqHXrSa8ldxyLknGGH/F3+xHn7GLAtU9hxCGffhZ0yZ92mReYmE/hvcm6JOCxFAXkXgdukIUpiOOAzkAxSMeBQfZjuRMRDo/Ijyy1+cPon08OBIjF/hdz0DSLwq4AYDEW86zpbWCJv8CgZJA4cWqew2Z8zTBZz01i6cE";
-        //parameters.vuforiaLicenseKey = "Ae1jMu//////AAAAGeOTvbI/jknrpPvd1Jvqdk4+f9Csy0CC9PVlGo1o3pXA9ZN/v5SYrMDAzxObLuZ5pRWhZ9F6XZH5tkZcgPBMnb5pe9r1MgIPvxEC7IQ9mGWsnzGdGl5ABrOCR/wrog7l5YKJeMuRrlVRib9So+hurF1WchB8nlnuwQe3E7fiC+0M/wtz2qYRBxcH6dM7XKhPHNKpiyH5s82YXwIVMEwFtSQHQI68ghVvj3vnVVf5B0o4aUS8gn2/ygAa4uhEwUf3kmAiZO/kwGpdQGy3moOOdzBDyJ8KmGZIckcsRFGQdtQtgDVCoKxItGMCeH0vWyRmSp4dqLsUVnDQLWZfEP8axZ7UIWO+A8ppclFj7A1qehC6";
-
-
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
@@ -214,27 +212,6 @@ public class VuforiaNavigator {
     }
 
 
-    /**
-     * Take any angle, in radians, and normalize it to the -pi to +pi range.
-     *
-     * @param angle Angle to be normalized.
-     * @return Normalized value.
-     */
-    public static double NormalizeAngle(double angle) {
-        double temp = (angle + Math.PI) / (2.0 * Math.PI);
-        return (temp - Math.floor(temp) - 0.5) * 2.0 * Math.PI;
-    }
-
-    public static double NormalizeDegrees(double angle) {
-        double temp = (angle + 180.0) / 360.0;
-        return (temp - Math.floor(temp) - 0.5) * 360.0;
-
-    }
-
-    public static double normalizeDegrees360(double angle){
-        double temp = angle / 360.0;
-        return (temp - Math.floor(temp)) * 360.0;
-    }
 
 
     /**

@@ -17,7 +17,7 @@ public abstract class LoggingLinearOpMode extends LinearOpMode {
     public final void runOpMode() throws InterruptedException{
         try {
             BetaLog.initialize();
-            runLoggingOpmode();
+            runLoggingOpMode();
         }
         finally{
             BetaLog.close();
@@ -29,7 +29,7 @@ public abstract class LoggingLinearOpMode extends LinearOpMode {
      * Subclasses will need to implement runLoggingOpmode(). It will have the same function as
      * runOpMode does in traditional LinearOpModes.
      */
-    public abstract void runLoggingOpmode() throws InterruptedException;
+    public abstract void runLoggingOpMode() throws InterruptedException;
 
 
 
