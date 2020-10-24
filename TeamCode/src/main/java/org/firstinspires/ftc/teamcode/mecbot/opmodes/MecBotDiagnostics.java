@@ -21,6 +21,8 @@ public class MecBotDiagnostics extends LinearOpMode {
 
     private MecBot bot = new MecBot();
 
+
+
     @Override
     public void runOpMode() {
 
