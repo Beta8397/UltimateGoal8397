@@ -2,12 +2,17 @@ package org.firstinspires.ftc.teamcode.goalbot;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.mecbot.MecBotTeleOp;
 import org.firstinspires.ftc.teamcode.util.gamepad.ButtonToggle;
 
 @TeleOp(name = "GoalBotTeleOp", group = "GoalBot")
 public class GoalbotTeleop extends MecBotTeleOp {
+
+    public static final float SHOOTER_DELAYED = 1.0f;
+
     GoalBot bot= new GoalBot();
 
     private GoalBot.IntakeState intakeState = GoalBot.IntakeState.OFF;
@@ -26,7 +31,32 @@ public class GoalbotTeleop extends MecBotTeleOp {
         }
     };
 
+    ButtonToggle toggleRightBumper2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.right_bumper;
+        }
+    };
+
+    ButtonToggle toggleLeftBumper2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.left_bumper;
+        }
+    };
+
+    ButtonToggle toggleB2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.b;
+        }
+    };
+
     private boolean grabberClosed = true;
+    private boolean shooterOn = false;
+    private boolean shooterHigh = false;
+    private boolean shooting = false;
+    private ElapsedTime shootingTimer= new ElapsedTime();
 
     public void runOpMode() {
         bot.init(hardwareMap);
@@ -42,6 +72,46 @@ public class GoalbotTeleop extends MecBotTeleOp {
 //                bot.grabber.setPosition    TODO: Handle grabber state
             }
             bot.setArmPower(armPower);
+
+            if (toggleRightBumper2.update()) {
+                shooterOn = !shooterOn;
+            }
+
+            if (toggleLeftBumper2.update()) {
+                shooterHigh = !shooterHigh;
+            }
+            if (shooterOn) {
+                if (shooterHigh) {
+                    bot.setShooterPowerHigh();
+                } else {
+                    bot.setShooterPowerNormal();
+                }
+            } else {
+                bot.setShooterPower(0);
+            }
+
+            float shooterRPM = (float)bot.shooter.getVelocity(AngleUnit.DEGREES) / 6;
+            telemetry.addData("shooter_RPM", shooterRPM);
+
+            if (toggleB2.update()) {
+                shooting = true;
+                shootingTimer.reset();
+            } else if(!gamepad2.b) {
+                shooting = false;
+            }
+
+            if (shooting) {
+                if (shootingTimer.seconds() < .5 * SHOOTER_DELAYED) {
+                    bot.setKickerEngaged();
+                } else if (shootingTimer.seconds() < SHOOTER_DELAYED) {
+                    bot.setKickerUnengaged();
+                } else {
+                    shootingTimer.reset();
+                }
+            } else {
+                bot.setKickerUnengaged();
+            }
+
             doDriveControl();
             telemetry.update();
 
