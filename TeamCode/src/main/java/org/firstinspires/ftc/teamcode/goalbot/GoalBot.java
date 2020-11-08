@@ -14,10 +14,10 @@ public class GoalBot extends MecBot {
 
     public static final float GRABBER_OPEN_POSITION = 0.2f;
     public static final float GRABBER_CLOSED_POSITION = 0.7f;
-    public static final float SHOOTER_POWER_NORMAL = 0.5f;
-    public static final float SHOOTER_POWER_HIGH = 0.8f;
-    public static final float KICKER_ENGAGED = 1.0f;
-    public static final float KICKER_UNENGAGED = 0;
+    public static final float SHOOTER_POWER_NORMAL = 0.9f;
+    public static final float SHOOTER_POWER_HIGH = 1.0f;
+    public static final float KICKER_ENGAGED = 0;
+    public static final float KICKER_UNENGAGED = 0.19f;
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
@@ -46,7 +46,7 @@ public class GoalBot extends MecBot {
         grabber = hwMap.get(Servo.class, "grabber");
         shooter = hwMap.get(DcMotorEx.class, "shooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE );
         kicker = hwMap.get(Servo.class, "kicker");
     }
 
