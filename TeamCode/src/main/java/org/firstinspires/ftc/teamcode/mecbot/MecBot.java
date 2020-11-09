@@ -316,7 +316,7 @@ public class MecBot {
          * Determine small increment of robot motion in ROBOT COORDINATE SYSTEM
          */
         float dXR = 0.25f * (-sBL + sFL - sFR + sBR) * TAN_ALPHA;
-        float dYR = 0.25f * (sBL + sFL + sFR + sBR) * TAN_ALPHA;
+        float dYR = 0.25f * (sBL + sFL + sFR + sBR);
 
         /*
          * Convert this small increment of robot motion into WORLD COORDINATES

@@ -30,7 +30,7 @@ public class GoalBot extends MecBot {
     }
 
     public GoalBot(){
-        super(MotorType.NeverestOrbital20, 13.25f, 13, 4, 43, 1, BNO055Enhanced.AxesMap.XZY,
+        super(MotorType.NeverestOrbital20, 13.25f, 13, 4, 40.9f, 1, BNO055Enhanced.AxesMap.XZY,
                 BNO055Enhanced.AxesSign.NNN);
     }
 

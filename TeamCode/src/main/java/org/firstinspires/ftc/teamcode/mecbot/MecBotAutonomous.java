@@ -209,5 +209,43 @@ public abstract class MecBotAutonomous extends LinearOpMode {
         bot.updateOdometry();
     }
 
+    protected void driveToPositionGyro(float vMax, float vMin, float targetX, float targetY, float targetThetaDegrees, float cp, float tolerance) {
+        float headingTargetRadians = targetThetaDegrees * (float)Math.PI / 180;
+
+        while (opModeIsActive()) {
+            bot.updateOdometry();
+
+            float xError = targetX - bot.getPose().x;
+            float yError = targetY - bot.getPose().y;
+            float thetaError = (float)AngleUtils.normalizeRadians(headingTargetRadians - bot.getPose().theta);
+
+            if(Math.hypot(xError, yError) < tolerance) {
+                break;
+            }
+
+            float sinTheta = (float)Math.sin(bot.getPose().theta);
+            float cosTheta = (float)Math.cos(bot.getPose().theta);
+
+            float xErrorRobot = xError * sinTheta - yError * cosTheta;
+            float yErrorRobot = xError * cosTheta + yError * sinTheta;
+
+            float vx = xErrorRobot * cp;
+            float vy = yErrorRobot * cp;
+            float v = (float)Math.hypot(vx, vy);
+            if(v > vMax) {
+                vx *= vMax / v;
+                vy *= vMax / v;
+            } else if(v < vMin) {
+                vx *= vMin / v;
+                vy *= vMin / v;
+            }
+            float va = HEADING_CORRECTION_FACTOR * thetaError;
+
+            bot.setDriveSpeed(vx, vy, va);
+
+        }
+        bot.setDriveSpeed(0, 0,0);
+    }
+
 
 }
