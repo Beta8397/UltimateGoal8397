@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.mecbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.CubicSpline2D;
@@ -84,11 +86,32 @@ public abstract class MecBotAutonomous extends LinearOpMode {
         float targetHeadingRadians = targetHeadingDegrees * (float) Math.PI / 180;
         float toleranceRadians = toleranceDegrees * (float) Math.PI / 180;
         float maxRadiansPerSec = maxDegreesPerSec * (float)Math.PI/180;
+        float priorHeading = bot.getHeadingRadians();
+        ElapsedTime et = new ElapsedTime();
         while (opModeIsActive()) {
             bot.updateOdometry();
             float currentHeading = bot.getPose().theta;
             float angleDiff = (float) AngleUtils.normalizeRadians(targetHeadingRadians - currentHeading);
-            if (Math.abs(angleDiff) < toleranceRadians) break;
+            float headingChange = 0;
+            if (currentHeading == priorHeading) {
+                if (et.milliseconds() > 50) {
+                    headingChange = (float)AngleUtils.normalizeRadians(currentHeading - priorHeading);
+                    if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians/5) {
+                        break;
+                    } else {
+                        et.reset();
+                        priorHeading = currentHeading;
+                    }
+                }
+            } else {
+                headingChange = (float)AngleUtils.normalizeRadians(currentHeading - priorHeading);
+                if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians/5) {
+                    break;
+                } else {
+                    et.reset();
+                    priorHeading = currentHeading;
+                }
+            }
             float va = propCoeff * angleDiff;
             if (Math.abs(va) > maxRadiansPerSec){
                 va = (float)Math.signum(va) * maxRadiansPerSec;
