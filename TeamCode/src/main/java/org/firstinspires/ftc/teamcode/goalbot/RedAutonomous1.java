@@ -27,7 +27,7 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         bot.setKickerUnengaged();
         waitForStart();
         bot.setShooterPowerHigh();
-        rings = getRings();
+        rings = getRings(false);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);
         turnToHeading(angle1, 1, 6, 45);
         shoot();

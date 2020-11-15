@@ -17,7 +17,7 @@ public class GoalBot extends MecBot {
     public static final float SHOOTER_POWER_NORMAL = 0.75f;
     public static final float SHOOTER_POWER_HIGH = 1.0f;
     public static final float KICKER_ENGAGED = 0;
-    public static final float KICKER_UNENGAGED = 0.21f;
+    public static final float KICKER_UNENGAGED = 0.19f;
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
@@ -25,7 +25,7 @@ public class GoalBot extends MecBot {
     DcMotorEx shooter;
     Servo kicker;
     Servo grabber;
-    enum IntakeState {
+    public enum IntakeState {
         OFF, FWD, REV
     }
 
