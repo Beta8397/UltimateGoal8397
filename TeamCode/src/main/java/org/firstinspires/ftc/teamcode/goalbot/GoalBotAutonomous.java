@@ -26,9 +26,17 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
     }
 
     public Rings getRings(boolean saveImage) {
-        //TODO: CODE THE RING DETECTION
+        /*
+         * Create a BlobHelper object. It will obtain and manage new images from the image stream, and crop and
+         * reduce them as requested; save images to a file if requested; and find blobs within images.
+         */
         BlobHelper blobHelper = new BlobHelper(1280, 720, 0, 0, 1280, 720,
                 4);
+
+        /*
+         * Use blobHelper to update the current image. If this is successfull, set the variable
+         * 'success' to true.
+         */
         boolean success = false;
         while (opModeIsActive()) {
             if (blobHelper.updateImage()) {
@@ -37,19 +45,36 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
             }
         }
 
-        if (success) {
+        if (success) {          //If blobHelper got an image, use it to analyze the ring stack
+
+            /*
+             * If 'saveImage' is true, save the image to file
+             */
             if (saveImage) {
                 blobHelper.saveRawImageFile(false);
             }
+
+            /*
+             * Use blobHelper to get a list of Blob objects from the current image, using the
+             * HSV Range that corresponds to the color of the rings, and requiring some minimum
+             * number of pixels in each blob (blobs with fewer pixels are ignored)
+             */
             List<Blob> blobs = blobHelper.getBlobs(HSV_RANGE, new org.firstinspires.ftc.robotcore.external.Predicate<Blob>() {
                 @Override
                 public boolean test(Blob blob) {
                     return blob.getNumPts() > 500;
                 }
             });
-            if (blobs.size() == 0) {
+
+
+            if (blobs.size() == 0) {        //zero blobs means ZERO stack height
                 return Rings.ZERO;
             } else {
+                /*
+                 * There should be only one blob in the list, but there could be more (e.g., from
+                 * some objects outside of the field). Assume that the largest blob (i.e., the one
+                 * with the greatest number of points) represents the ring stack.
+                 */
                 Blob biggestBlob = blobs.get(0);
                 blobs.remove(0);
                 while (blobs.size() > 0) {
@@ -58,14 +83,20 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
                     }
                     blobs.remove(0);
                 }
+
+                /*
+                 * Obtain the ratio of the variance in the X direction (horizontal) to the variance
+                 * in the Y direction (vertical) of the pixels in the blob. These are proportionate
+                 * to the square of the length and height of the blob.
+                 */
                 float ratio = biggestBlob.getVarXX() / biggestBlob.getVarYY();
-                if (ratio > 10) {
+                if (ratio > 10) {              //Larger ratio --> long/skinny blob
                     return Rings.ONE;
-                } else {
+                } else {                       //smaller ratio --> blob closer to being square in shape
                     return Rings.FOUR;
                 }
             }
-        } else {
+        } else {            //If blobHelper didn't get an image, just take a guess about the stack
             return Rings.ONE;
         }
 
