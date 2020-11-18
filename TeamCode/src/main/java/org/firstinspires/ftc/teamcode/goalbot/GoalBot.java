@@ -50,6 +50,15 @@ public class GoalBot extends MecBot {
         kicker = hwMap.get(Servo.class, "kicker");
     }
 
+//    public void setArmMode(DcMotor.RunMode Mode){
+//        armMotor.setMode(Mode);
+//    }
+//    public void setArmPosition(int ticks){
+//        armMotor.setTargetPosition(ticks);
+//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        armMotor.setPower(.5);
+//    }
+
     public void setIntake(IntakeState intakeState) {
         if (intakeState == IntakeState.OFF) {
             setIntakePower(0);

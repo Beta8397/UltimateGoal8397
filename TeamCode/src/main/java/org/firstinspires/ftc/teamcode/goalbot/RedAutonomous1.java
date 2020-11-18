@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
 
@@ -23,8 +25,11 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         bot.init(hardwareMap);
         super.setBot(bot);
         VuforiaNavigator.activate(null, null);
+        sleep(3000);
+        CameraDevice.getInstance().setField("zoom", ""+20);
         bot.setPose(X0, Y0, 180);
         bot.setKickerUnengaged();
+        bot.setGrabberClosed();
         waitForStart();
         bot.setShooterPowerHigh();
         rings = getRings(false);
@@ -42,6 +47,30 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         shoot();
 //        telemetry.addData("shot 3", "");
 //        telemetry.update();
+
+        turnToHeading(-90, 3, 6, 45);
+        float x;
+        float y;
+        if(rings == Rings.ZERO){
+            x = 72;
+            y = 24;
+        } else if(rings == Rings.ONE){
+            x = 96;
+            y = 48;
+        } else{
+            x = 120;
+            y = 24;
+        }
+
+        //bot.setArmPosition(342);
+        driveToPosition(18,4,x,y,-90,2,1);
+        bot.setGrabberOpen();
+        sleep(500);
+        //bot.setArmPosition(120);
+        sleep(500);
+        float parkY = bot.getPose().y;
+        driveToPosition(18,4,84,parkY, -90,2,1);
+
         while (opModeIsActive()) {
             continue;
         }

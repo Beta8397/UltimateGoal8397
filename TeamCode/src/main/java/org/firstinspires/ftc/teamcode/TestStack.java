@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
 import org.firstinspires.ftc.teamcode.goalbot.GoalBot;
@@ -32,6 +33,8 @@ public class TestStack extends GoalBotAutonomous {
         bot.init(hardwareMap);
         super.setBot(bot);
         VuforiaNavigator.activate(null, null);
+        sleep(3000);
+        CameraDevice.getInstance().setField("zoom", ""+20);
         VuforiaNavigator.setFlashTorchMode(true);
         waitForStart();
         while (opModeIsActive()) {

@@ -44,7 +44,7 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
             List<Blob> blobs = blobHelper.getBlobs(HSV_RANGE, new org.firstinspires.ftc.robotcore.external.Predicate<Blob>() {
                 @Override
                 public boolean test(Blob blob) {
-                    return blob.getNumPts() > 500;
+                    return blob.getNumPts() > 150;
                 }
             });
             if (blobs.size() == 0) {
