@@ -59,7 +59,7 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
                     blobs.remove(0);
                 }
                 float ratio = biggestBlob.getVarXX() / biggestBlob.getVarYY();
-                if (ratio > 10) {
+                if (ratio > 7) {
                     return Rings.ONE;
                 } else {
                     return Rings.FOUR;

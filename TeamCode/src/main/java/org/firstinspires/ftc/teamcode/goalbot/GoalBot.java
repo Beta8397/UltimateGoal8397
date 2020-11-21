@@ -21,7 +21,7 @@ public class GoalBot extends MecBot {
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
-    DcMotorEx armMotor;
+    public DcMotorEx armMotor;
     DcMotorEx shooter;
     Servo kicker;
     Servo grabber;
@@ -43,6 +43,7 @@ public class GoalBot extends MecBot {
         intakeBack.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor = hwMap.get(DcMotorEx.class, "arm_motor");
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         grabber = hwMap.get(Servo.class, "grabber");
         shooter = hwMap.get(DcMotorEx.class, "shooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -50,14 +51,20 @@ public class GoalBot extends MecBot {
         kicker = hwMap.get(Servo.class, "kicker");
     }
 
-//    public void setArmMode(DcMotor.RunMode Mode){
-//        armMotor.setMode(Mode);
-//    }
-//    public void setArmPosition(int ticks){
-//        armMotor.setTargetPosition(ticks);
-//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        armMotor.setPower(.5);
-//    }
+    public void setArmMode(DcMotor.RunMode Mode){
+        if (Mode == DcMotor.RunMode.RUN_TO_POSITION) {
+            armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        }
+        armMotor.setMode(Mode);
+    }
+
+    public void setArmPosition(int ticks){
+        armMotor.setTargetPosition(ticks);
+        if (armMotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        armMotor.setPower(.3);
+    }
 
     public void setIntake(IntakeState intakeState) {
         if (intakeState == IntakeState.OFF) {

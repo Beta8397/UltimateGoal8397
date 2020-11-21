@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
+import com.google.gson.internal.$Gson$Types;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraDevice;
@@ -12,7 +13,7 @@ public class RedAutonomous1 extends GoalBotAutonomous {
     public static final float X0 = 9;
     public static final float Y0 = 37;
     public static final float X_SHOOT = 69;
-    public static final float Y_SHOOT = 50;
+    public static final float Y_SHOOT = 60;
     public static final float angle1 = -153;
     public static final float angle2 = -160;
     public static final float angle3 = -166;
@@ -30,6 +31,8 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         bot.setPose(X0, Y0, 180);
         bot.setKickerUnengaged();
         bot.setGrabberClosed();
+        bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bot.setArmPosition(0);
         waitForStart();
         bot.setShooterPowerHigh();
         rings = getRings(false);
@@ -52,21 +55,21 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         float x;
         float y;
         if(rings == Rings.ZERO){
-            x = 72;
-            y = 24;
+            x = 75;
+            y = 27;
         } else if(rings == Rings.ONE){
-            x = 96;
-            y = 48;
+            x = 99;
+            y = 51;
         } else{
-            x = 120;
-            y = 24;
+            x = 123;
+            y = 27;
         }
 
-        //bot.setArmPosition(342);
+        bot.setArmPosition(400);
         driveToPosition(18,4,x,y,-90,2,1);
         bot.setGrabberOpen();
         sleep(500);
-        //bot.setArmPosition(120);
+        bot.setArmPosition(0);
         sleep(500);
         float parkY = bot.getPose().y;
         driveToPosition(18,4,84,parkY, -90,2,1);

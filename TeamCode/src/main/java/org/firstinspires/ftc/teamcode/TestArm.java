@@ -1,0 +1,27 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.goalbot.GoalBot;
+
+@TeleOp (name = "test arm", group = "test")
+public class TestArm extends LinearOpMode {
+
+    GoalBot bot = new GoalBot();
+
+    public void runOpMode() {
+        bot.init(hardwareMap);
+        bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bot.setArmPosition(0);
+        waitForStart();
+        while (opModeIsActive()) {
+            float target = (1-gamepad1.left_stick_y) * 280;
+            bot.setArmPosition((int) target);
+            telemetry.addData("target =", target);
+            telemetry.addData("ticks =", bot.armMotor.getCurrentPosition());
+            telemetry.update();
+        }
+    }
+}
