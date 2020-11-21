@@ -91,21 +91,18 @@ public abstract class MecBotAutonomous extends LinearOpMode {
         while (opModeIsActive()) {
             bot.updateOdometry();
             float currentHeading = bot.getPose().theta;
+            /*
+             * Normalized difference between target heading and current heading
+             */
             float angleDiff = (float) AngleUtils.normalizeRadians(targetHeadingRadians - currentHeading);
-            float headingChange = 0;
-            if (currentHeading == priorHeading) {
-                if (et.milliseconds() > 50) {
-                    headingChange = (float)AngleUtils.normalizeRadians(currentHeading - priorHeading);
-                    if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians/5) {
-                        break;
-                    } else {
-                        et.reset();
-                        priorHeading = currentHeading;
-                    }
-                }
-            } else {
-                headingChange = (float)AngleUtils.normalizeRadians(currentHeading - priorHeading);
-                if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians/5) {
+            /*
+             * Only check for completion if we believe we have a new reading from gyro. Assume a new reading
+             * if: current reading is different from old one OR more than 50 ms has elapsed since the last
+             * (assumed) new reading. After the test for completion, reset the timer and update priorHeading.
+             */
+            if (currentHeading != priorHeading || et.milliseconds() > 50) {
+                float headingChange = (float) AngleUtils.normalizeRadians(currentHeading - priorHeading);
+                if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians / 5) {
                     break;
                 } else {
                     et.reset();
