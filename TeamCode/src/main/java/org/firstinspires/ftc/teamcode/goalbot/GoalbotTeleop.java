@@ -17,10 +17,10 @@ public class GoalbotTeleop extends MecBotTeleOp {
 
     private GoalBot.IntakeState intakeState = GoalBot.IntakeState.OFF;
 
-    ButtonToggle toggleA1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+    ButtonToggle toggleRightBumper1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
         protected boolean getButtonState() {
-            return gamepad1.a;
+            return gamepad1.right_bumper;
         }
     };
 
@@ -120,24 +120,24 @@ public class GoalbotTeleop extends MecBotTeleOp {
 
     private void handleIntake() {
 
-        boolean aToggled = toggleA1.update();
+        boolean RightBumperToggled = toggleRightBumper1.update();
         switch (intakeState) {
             case OFF:
-                if (gamepad1.b) {
+                if (gamepad1.left_bumper) {
                     intakeState = GoalBot.IntakeState.REV;
-                } else if (aToggled){
+                } else if (RightBumperToggled){
                     intakeState = GoalBot.IntakeState.FWD;
                 }
                 break;
             case FWD:
-                if (gamepad1.b) {
+                if (gamepad1.left_bumper) {
                     intakeState = GoalBot.IntakeState.REV;
-                } else if (aToggled) {
+                } else if (RightBumperToggled) {
                     intakeState = GoalBot.IntakeState.OFF;
                 }
                 break;
             case REV:
-                if (!gamepad1.b) {
+                if (!gamepad1.left_bumper) {
                     intakeState = GoalBot.IntakeState.OFF;
                 }
                 break;

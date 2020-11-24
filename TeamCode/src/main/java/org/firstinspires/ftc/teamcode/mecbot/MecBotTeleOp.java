@@ -59,6 +59,7 @@ public abstract class MecBotTeleOp extends LinearOpMode {
     };
 
     protected static final float SLOW_MODE_SCALER = 4.0f;
+    protected static final float FAST_MODE_SCALER = 2.0f;
     protected static final float JOYSTICK_DEADZONE = 0.05f;
     protected static final float TRIGGER_DEADZONE = 0.05f;
 
@@ -121,6 +122,10 @@ public abstract class MecBotTeleOp extends LinearOpMode {
             px /= SLOW_MODE_SCALER;
             py /= SLOW_MODE_SCALER;
             pa /= SLOW_MODE_SCALER;
+        } else {
+            px /= FAST_MODE_SCALER;
+            py /= FAST_MODE_SCALER;
+            pa /= FAST_MODE_SCALER;
         }
 
         bot.setDrivePower( px,  py,  pa);
