@@ -16,8 +16,10 @@ public class GoalBot extends MecBot {
     public static final float GRABBER_CLOSED_POSITION = 0.7f;
     public static final float SHOOTER_POWER_NORMAL = 0.75f;
     public static final float SHOOTER_POWER_HIGH = 0.9f;
-    public static final float KICKER_ENGAGED = 0;
-    public static final float KICKER_UNENGAGED = 0.19f;
+    public static final float KICKER_ENGAGED = 0.16f;
+    public static final float KICKER_UNENGAGED = 0.34f;
+    public static final float RING_KICKER_ENGAGED = 0;
+    public static final float RING_KICKER_UNENGAGED = 0.4f;
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
@@ -25,6 +27,7 @@ public class GoalBot extends MecBot {
     DcMotorEx shooter;
     Servo kicker;
     Servo grabber;
+    Servo ringKicker;
     public enum IntakeState {
         OFF, FWD, REV
     }
@@ -43,12 +46,13 @@ public class GoalBot extends MecBot {
         intakeBack.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor = hwMap.get(DcMotorEx.class, "arm_motor");
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         grabber = hwMap.get(Servo.class, "grabber");
         shooter = hwMap.get(DcMotorEx.class, "shooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE );
         kicker = hwMap.get(Servo.class, "kicker");
+        ringKicker = hwMap.get(Servo.class, "ring kicker");
     }
 
     public void setArmMode(DcMotor.RunMode Mode){
@@ -64,6 +68,10 @@ public class GoalBot extends MecBot {
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         armMotor.setPower(.3);
+    }
+
+    public int getArmTargetPosition() {
+        return armMotor.getTargetPosition();
     }
 
     public void setIntake(IntakeState intakeState) {
@@ -98,6 +106,18 @@ public class GoalBot extends MecBot {
 
     public void setKickerUnengaged() {
         setKickerPosition(KICKER_UNENGAGED);
+    }
+
+    public void setRingKickerPosition(float pos) {
+        ringKicker.setPosition(pos);
+    }
+
+    public void setRingKickerEngaged() {
+        setRingKickerPosition(RING_KICKER_ENGAGED);
+    }
+
+    public void setRingKickerUnengaged() {
+        setRingKickerPosition(RING_KICKER_UNENGAGED);
     }
 
     public void setArmPower(float pwr){

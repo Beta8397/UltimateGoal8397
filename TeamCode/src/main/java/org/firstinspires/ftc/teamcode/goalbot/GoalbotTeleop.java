@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.goalbot;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -51,27 +52,42 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad2.b;
         }
     };
+    ButtonToggle toggleA1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() { return gamepad1.a; }
+    };
 
     private boolean grabberClosed = true;
     private boolean shooterOn = false;
     private boolean shooterHigh = false;
     private boolean shooting = false;
+    private boolean ringStuck = true;
     private ElapsedTime shootingTimer= new ElapsedTime();
 
     public void runOpMode() {
         bot.init(hardwareMap);
         super.setup(bot);
+        bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
+        float armPosition = bot.getArmTargetPosition();
 
         waitForStart();
 
         while (opModeIsActive()) {
             handleIntake();
-            float armPower = -0.25f * gamepad2.left_stick_y;
             if (toggleA2.update()){
                 grabberClosed = !grabberClosed;
+                if (grabberClosed) {
+                    bot.setGrabberClosed();
+                } else {
+                    bot.setGrabberOpen();
+                }
 //                bot.grabber.setPosition    TODO: Handle grabber state
             }
-            bot.setArmPower(armPower);
+            if (gamepad2.left_stick_y < -0.5) {
+                bot.setArmPosition(630);
+            } else if (gamepad2.left_stick_y > 0.5) {
+                bot.setArmPosition(40);
+            }
 
             if (toggleRightBumper2.update()) {
                 shooterOn = !shooterOn;
@@ -89,6 +105,16 @@ public class GoalbotTeleop extends MecBotTeleOp {
             } else {
                 bot.setShooterPower(0);
             }
+
+            if (toggleA1.update()) {
+                ringStuck = !ringStuck;
+            }
+            if (ringStuck) {
+                bot.setRingKickerEngaged();
+            } else {
+                bot.setRingKickerUnengaged();
+            }
+
 
             float shooterRPM = (float)bot.shooter.getVelocity(AngleUnit.DEGREES) / 6;
             telemetry.addData("shooter_RPM", shooterRPM);
@@ -111,6 +137,8 @@ public class GoalbotTeleop extends MecBotTeleOp {
             } else {
                 bot.setKickerUnengaged();
             }
+
+
 
             doDriveControl();
             telemetry.update();
@@ -141,6 +169,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
                     intakeState = GoalBot.IntakeState.OFF;
                 }
                 break;
+
         }
         bot.setIntake(intakeState);
 

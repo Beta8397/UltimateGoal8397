@@ -58,8 +58,8 @@ public abstract class MecBotTeleOp extends LinearOpMode {
         }
     };
 
-    protected static final float SLOW_MODE_SCALER = 4.0f;
-    protected static final float FAST_MODE_SCALER = 2.0f;
+    protected static final float SLOW_MODE_SCALER = 5.0f;
+    protected static final float FAST_MODE_SCALER =1.5f;
     protected static final float JOYSTICK_DEADZONE = 0.05f;
     protected static final float TRIGGER_DEADZONE = 0.05f;
 
