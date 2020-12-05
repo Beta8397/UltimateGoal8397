@@ -14,9 +14,9 @@ public class RedAutonomous1 extends GoalBotAutonomous {
     public static final float Y0 = 37;
     public static final float X_SHOOT = 66;
     public static final float Y_SHOOT = 59;
-    public static final float angle1 = -160;
-    public static final float angle2 = -164;
-    public static final float angle3 = -170;
+    public static final float angle1 = -156;
+    public static final float angle2 = -160;
+    public static final float angle3 = -166;
 
     GoalBot bot = new GoalBot();
 

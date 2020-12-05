@@ -124,8 +124,8 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
             if(armStateChange) {
 
-                int armTarget = armPos == ArmPos.OUT ? 630 :
-                        armPos == ArmPos.UP ? 320 : 80;
+                int armTarget = armPos == ArmPos.OUT ? 570 :
+                        armPos == ArmPos.UP ? 300 : 80;
                 bot.setArmPosition(armTarget);
             }
             if(armPos == ArmPos.IN && bot.getArmActualPos() < 100){

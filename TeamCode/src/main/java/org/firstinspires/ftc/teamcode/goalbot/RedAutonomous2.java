@@ -13,9 +13,9 @@ public class RedAutonomous2 extends GoalBotAutonomous {
     public static final float Y0 = 37;
     public static final float X_SHOOT = 66;
     public static final float Y_SHOOT = 59;
-    public static final float angle1 = -160;
-    public static final float angle2 = -164;
-    public static final float angle3 = -170;
+    public static final float angle1 = -152;
+    public static final float angle2 = -156;
+    public static final float angle3 = -164;
 
     GoalBot bot = new GoalBot();
 
@@ -71,13 +71,13 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         bot.setArmPosition(0);
         sleep(500);
         turnToHeading(180, 3, 6, 45);
-        bot.setArmPosition(630);
+        bot.setArmPosition(570);
         if (rings == Rings.ZERO || rings == Rings.FOUR) {
 
-            driveToPosition(18, 4, 36, 34, 180, 2, 1);
+            driveToPosition(18, 4, 36, 29, 180, 2, 1);
         } else {
-            driveToPosition(18, 4, bot.getPose().x - 24, 34, 180, 2, 4 );
-            driveToPosition(18, 4, 36, 34, 180, 2, 1);
+            driveToPosition(18, 4, bot.getPose().x - 24, 29, 180, 2, 4 );
+            driveToPosition(18, 4, 36, 29, 180, 2, 1);
         }
         bot.setGrabberClosed();
         sleep(500);
