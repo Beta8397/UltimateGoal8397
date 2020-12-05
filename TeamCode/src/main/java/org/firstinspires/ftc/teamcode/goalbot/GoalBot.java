@@ -69,6 +69,9 @@ public class GoalBot extends MecBot {
         }
         armMotor.setPower(.3);
     }
+    public int getArmActualPos(){
+        return armMotor.getCurrentPosition();
+    }
 
     public int getArmTargetPosition() {
         return armMotor.getTargetPosition();

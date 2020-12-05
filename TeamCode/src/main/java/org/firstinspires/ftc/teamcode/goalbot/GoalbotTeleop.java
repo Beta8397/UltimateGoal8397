@@ -52,9 +52,21 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad2.b;
         }
     };
-    ButtonToggle toggleA1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+    ButtonToggle toggleX2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
-        protected boolean getButtonState() { return gamepad1.a; }
+        protected boolean getButtonState() { return gamepad2.x; }
+    };
+    ButtonToggle toggleDpadDown2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.dpad_down;
+        }
+    };
+    ButtonToggle toggleDpadUp2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.dpad_up;
+        }
     };
 
     private boolean grabberClosed = true;
@@ -63,6 +75,11 @@ public class GoalbotTeleop extends MecBotTeleOp {
     private boolean shooting = false;
     private boolean ringStuck = true;
     private ElapsedTime shootingTimer= new ElapsedTime();
+    private enum ArmPos{
+        IN, UP, OUT
+    }
+
+    private ArmPos armPos = ArmPos.IN;
 
     public void runOpMode() {
         bot.init(hardwareMap);
@@ -83,11 +100,38 @@ public class GoalbotTeleop extends MecBotTeleOp {
                 }
 //                bot.grabber.setPosition    TODO: Handle grabber state
             }
-            if (gamepad2.left_stick_y < -0.5) {
-                bot.setArmPosition(630);
-            } else if (gamepad2.left_stick_y > 0.5) {
-                bot.setArmPosition(40);
+
+            boolean dUp = toggleDpadUp2.update();
+            boolean dDown = toggleDpadDown2.update();
+            boolean armStateChange = false;
+
+            if (armPos == ArmPos.IN){
+                if (dDown){
+                    armPos = ArmPos.OUT;
+                    armStateChange = true;
+                }
+
+            } else {
+                if (dDown){
+                    armPos = ArmPos.IN;
+                    armStateChange = true;
+                } else {
+                    if(dUp){
+                        armPos = armPos == ArmPos.OUT? ArmPos.UP:ArmPos.OUT;
+                        armStateChange = true;
+                    }
+                }
             }
+            if(armStateChange) {
+
+                int armTarget = armPos == ArmPos.OUT ? 630 :
+                        armPos == ArmPos.UP ? 320 : 80;
+                bot.setArmPosition(armTarget);
+            }
+            if(armPos == ArmPos.IN && bot.getArmActualPos() < 100){
+                bot.setArmPower(0);
+            }
+
 
             if (toggleRightBumper2.update()) {
                 shooterOn = !shooterOn;
@@ -106,7 +150,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
                 bot.setShooterPower(0);
             }
 
-            if (toggleA1.update()) {
+            if (toggleX2.update()) {
                 ringStuck = !ringStuck;
             }
             if (ringStuck) {

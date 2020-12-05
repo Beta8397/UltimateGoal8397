@@ -71,6 +71,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         bot.setArmPosition(0);
         sleep(500);
         turnToHeading(180, 3, 6, 45);
+        bot.setArmPosition(630);
         if (rings == Rings.ZERO || rings == Rings.FOUR) {
 
             driveToPosition(18, 4, 36, 34, 180, 2, 1);
@@ -78,6 +79,15 @@ public class RedAutonomous2 extends GoalBotAutonomous {
             driveToPosition(18, 4, bot.getPose().x - 24, 34, 180, 2, 4 );
             driveToPosition(18, 4, 36, 34, 180, 2, 1);
         }
+        bot.setGrabberClosed();
+        sleep(500);
+        bot.setArmPosition(300);
+        turnToHeading(-90, 2,6, 45);
+        driveToPosition(18,4,x,y,-90,2,1);
+        bot.setArmPosition(400);
+        sleep(500);
+        bot.setGrabberOpen();
+        sleep(500);
         float parkY = bot.getPose().y;
         driveToPosition(18,4,80,parkY, -90,2,1);
         bot.setShooterPower(0);
