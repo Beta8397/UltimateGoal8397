@@ -11,11 +11,11 @@ public class RedAutonomous2 extends GoalBotAutonomous {
 
     public static final float X0 = 9;
     public static final float Y0 = 37;
-    public static final float X_SHOOT = 66;
+    public static final float X_SHOOT = 67.5f;
     public static final float Y_SHOOT = 59;
-    public static final float angle1 = -152;
-    public static final float angle2 = -156;
-    public static final float angle3 = -164;
+    public static final float angle1 = -160;
+    public static final float angle2 = -164;
+    public static final float angle3 = -170;
 
     GoalBot bot = new GoalBot();
 
@@ -29,9 +29,10 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         CameraDevice.getInstance().setField("zoom", ""+20);
         bot.setPose(X0, Y0, 180);
         bot.setKickerUnengaged();
+        bot.setRingKickerUnengaged();
         bot.setGrabberClosed();
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bot.setArmPosition(0);
+        bot.setArmPosition(50);
         waitForStart();
         bot.setShooterPowerNormal();
         rings = getRings(true);
@@ -42,7 +43,9 @@ public class RedAutonomous2 extends GoalBotAutonomous {
 //        telemetry.addData("shot 1", "");
 //        telemetry.update();
         turnToHeading(angle2,1, 6, 45);
+        bot.setRingKickerEngaged();
         shoot();
+        bot.setRingKickerUnengaged();
 //        telemetry.addData("shot 2", "");
 //        telemetry.update();
         turnToHeading(angle3,1, 6, 45);
@@ -64,32 +67,41 @@ public class RedAutonomous2 extends GoalBotAutonomous {
             y = 27;
         }
 
-        bot.setArmPosition(400);
-        driveToPosition(18,4,x,y,-90,2,1);
+        bot.setArmPosition(470);
+        driveToPosition(36,6,x,y,-90,2,1);
         bot.setGrabberOpen();
-        sleep(500);
+        sleep(300);
         bot.setArmPosition(0);
-        sleep(500);
+        sleep(300);
         turnToHeading(180, 3, 6, 45);
-        bot.setArmPosition(570);
+        bot.setArmPosition(610);
         if (rings == Rings.ZERO || rings == Rings.FOUR) {
 
-            driveToPosition(18, 4, 36, 29, 180, 2, 1);
+            driveToPosition(36, 6, 36, 29, 180, 2, 1);
         } else {
-            driveToPosition(18, 4, bot.getPose().x - 24, 29, 180, 2, 4 );
-            driveToPosition(18, 4, 36, 29, 180, 2, 1);
+            driveToPosition(36, 6, bot.getPose().x - 24, 29, 180, 2, 6 );
+            driveToPosition(36, 6, 36, 29, 180, 2, 1);
         }
         bot.setGrabberClosed();
         sleep(500);
         bot.setArmPosition(300);
         turnToHeading(-90, 2,6, 45);
-        driveToPosition(18,4,x,y,-90,2,1);
-        bot.setArmPosition(400);
-        sleep(500);
+        if (rings != Rings.ZERO) {
+            x = x - 10;
+        }
+        driveToPosition(36,6,x,y,-90,2,1);
+        bot.setArmPosition(470);
+        sleep(300);
         bot.setGrabberOpen();
-        sleep(500);
+        sleep(300);
+        bot.setArmPosition(0);
+        bot.setGrabberClosed();
         float parkY = bot.getPose().y;
-        driveToPosition(18,4,80,parkY, -90,2,1);
+        float parkX = 80;
+        if (rings != Rings.ZERO) {
+            driveToPosition(36,6, parkX,parkY, -90,2,1);
+        }
+
         bot.setShooterPower(0);
 
     }

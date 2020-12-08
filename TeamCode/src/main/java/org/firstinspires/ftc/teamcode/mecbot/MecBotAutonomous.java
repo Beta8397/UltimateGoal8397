@@ -113,6 +113,9 @@ public abstract class MecBotAutonomous extends LinearOpMode {
             if (Math.abs(va) > maxRadiansPerSec){
                 va = (float)Math.signum(va) * maxRadiansPerSec;
             }
+            telemetry.addData("TURN", "CH = %.2f    AD = %.2f   VA = %.2f",
+                    currentHeading * (180/Math.PI), angleDiff * (180/Math.PI), va * (180/Math.PI));
+            telemetry.update();
             bot.setDriveSpeed(0, 0, va);
         }
         bot.setDrivePower(0, 0, 0);

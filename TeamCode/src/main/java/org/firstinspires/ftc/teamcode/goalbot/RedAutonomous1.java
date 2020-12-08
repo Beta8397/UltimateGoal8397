@@ -12,11 +12,11 @@ public class RedAutonomous1 extends GoalBotAutonomous {
 
     public static final float X0 = 9;
     public static final float Y0 = 37;
-    public static final float X_SHOOT = 66;
+    public static final float X_SHOOT = 67;
     public static final float Y_SHOOT = 59;
-    public static final float angle1 = -156;
-    public static final float angle2 = -160;
-    public static final float angle3 = -166;
+    public static final float angle1 = -160;
+    public static final float angle2 = -164;
+    public static final float angle3 = -170;
 
     GoalBot bot = new GoalBot();
 
@@ -32,7 +32,7 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         bot.setKickerUnengaged();
         bot.setGrabberClosed();
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bot.setArmPosition(0);
+        bot.setArmPosition(50);
         waitForStart();
         bot.setShooterPowerNormal();
         rings = getRings(true);
@@ -65,7 +65,7 @@ public class RedAutonomous1 extends GoalBotAutonomous {
             y = 27;
         }
 
-        bot.setArmPosition(400);
+        bot.setArmPosition(470);
         driveToPosition(18,4,x,y,-90,2,1);
         bot.setGrabberOpen();
         sleep(500);
