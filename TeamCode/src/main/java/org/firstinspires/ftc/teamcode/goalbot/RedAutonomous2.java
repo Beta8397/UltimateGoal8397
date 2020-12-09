@@ -53,7 +53,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
 //        telemetry.addData("shot 3", "");
 //        telemetry.update();
 
-        turnToHeading(-90, 3, 6, 45);
+        turnToHeading(-90, 5, 8, 60);
         float x;
         float y;
         if(rings == Rings.ZERO){
@@ -67,27 +67,39 @@ public class RedAutonomous2 extends GoalBotAutonomous {
             y = 27;
         }
 
+        //Drive to drop off first wobble.
+
         bot.setArmPosition(470);
         driveToPosition(36,6,x,y,-90,2,1);
         bot.setGrabberOpen();
         sleep(300);
         bot.setArmPosition(0);
         sleep(300);
-        turnToHeading(180, 3, 6, 45);
+        //Drive to pick up the second wobble. Turn first if needed.
+        if (rings != Rings.FOUR) {
+            turnToHeading(180, 5, 8, 60);
+        }
         bot.setArmPosition(610);
-        if (rings == Rings.ZERO || rings == Rings.FOUR) {
-
+        //drive to pick up second wobble.
+        if (rings == Rings.ZERO) {
             driveToPosition(36, 6, 36, 29, 180, 2, 1);
-        } else {
+        } else if (rings == Rings.ONE){
             driveToPosition(36, 6, bot.getPose().x - 24, 29, 180, 2, 6 );
             driveToPosition(36, 6, 36, 29, 180, 2, 1);
+        } else {
+            driveToPosition(36, 6, 16, 42, -90, 2, 1);
+            driveToPosition(36, 6, 19, 42, -90, 2, 1);
+            driveToPosition(36, 6, 19, 36, -90, 2, 1);
         }
         bot.setGrabberClosed();
         sleep(500);
         bot.setArmPosition(300);
-        turnToHeading(-90, 2,6, 45);
+        //Turn robot, then drive to drop off second wobble.
+        if (rings != Rings.FOUR) {
+            turnToHeading(-90, 4,8, 60);
+        }
         if (rings != Rings.ZERO) {
-            x = x - 10;
+            x = x - 7;
         }
         driveToPosition(36,6,x,y,-90,2,1);
         bot.setArmPosition(470);
@@ -98,8 +110,11 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         bot.setGrabberClosed();
         float parkY = bot.getPose().y;
         float parkX = 80;
-        if (rings != Rings.ZERO) {
+        //drive to park.
+        if (rings == Rings.ONE) {
             driveToPosition(36,6, parkX,parkY, -90,2,1);
+        } else {
+            driveToPosition(36,6,bot.getPose().x, bot.getPose().y + 3, -90,2,1);
         }
 
         bot.setShooterPower(0);

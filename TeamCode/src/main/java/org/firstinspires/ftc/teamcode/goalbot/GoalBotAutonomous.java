@@ -105,7 +105,7 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
 
     public void shoot() {
         bot.setKickerEngaged();
-        sleep(500);
+        sleep(300);
         bot.setKickerUnengaged();
     }
 

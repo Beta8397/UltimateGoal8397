@@ -16,7 +16,7 @@ public class GoalBot extends MecBot {
     public static final float GRABBER_CLOSED_POSITION = 0.7f;
     public static final float SHOOTER_POWER_NORMAL = 0.75f;
     public static final float SHOOTER_POWER_HIGH = 0.9f;
-    public static final float KICKER_ENGAGED = 0.16f;
+    public static final float KICKER_ENGAGED = 0.14f;
     public static final float KICKER_UNENGAGED = 0.35f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
@@ -34,7 +34,7 @@ public class GoalBot extends MecBot {
 
     public GoalBot(){
         super(MotorType.NeverestOrbital20, 13.25f, 13, 4, 40.9f, 1, BNO055Enhanced.AxesMap.XZY,
-                BNO055Enhanced.AxesSign.NNN);
+                BNO055Enhanced.AxesSign.NPP);
     }
 
 
