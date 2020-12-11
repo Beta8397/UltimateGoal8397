@@ -45,11 +45,11 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         turnToHeading(angle2,1, 6, 45);
         bot.setRingKickerEngaged();
         shoot();
-        bot.setRingKickerUnengaged();
 //        telemetry.addData("shot 2", "");
 //        telemetry.update();
         turnToHeading(angle3,1, 6, 45);
         shoot();
+        bot.setRingKickerUnengaged();
 //        telemetry.addData("shot 3", "");
 //        telemetry.update();
 
@@ -87,9 +87,10 @@ public class RedAutonomous2 extends GoalBotAutonomous {
             driveToPosition(36, 6, bot.getPose().x - 24, 29, 180, 2, 6 );
             driveToPosition(36, 6, 36, 29, 180, 2, 1);
         } else {
+            bot.setIntake(GoalBot.IntakeState.REV);
             driveToPosition(36, 6, 16, 42, -90, 2, 1);
             driveToPosition(36, 6, 19, 42, -90, 2, 1);
-            driveToPosition(36, 6, 19, 36, -90, 2, 1);
+            driveToPosition(36, 6, 19, 34.5f, -90, 2, 1);
         }
         bot.setGrabberClosed();
         sleep(500);
@@ -111,7 +112,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         float parkY = bot.getPose().y;
         float parkX = 80;
         //drive to park.
-        if (rings == Rings.ONE) {
+        if (rings == Rings.ONE || rings == Rings.FOUR) {
             driveToPosition(36,6, parkX,parkY, -90,2,1);
         } else {
             driveToPosition(36,6,bot.getPose().x, bot.getPose().y + 3, -90,2,1);
