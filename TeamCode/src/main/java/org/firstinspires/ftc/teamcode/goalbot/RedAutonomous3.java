@@ -7,16 +7,17 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
 
-@Autonomous(name = "red auto2", group = "red")
-public class RedAutonomous2 extends GoalBotAutonomous {
+@Autonomous(name = "red auto3", group = "red")
+public class RedAutonomous3 extends GoalBotAutonomous {
 
     public static final float X0 = 9;
     public static final float Y0 = 37;
-    public static final float X_SHOOT = 67.5f;
-    public static final float Y_SHOOT = 59;
-    public static final float angle1 = -160;
-    public static final float angle2 = -164;
-    public static final float angle3 = -170;
+    public static final float X_SHOOT = 36f;
+    public static final float Y_SHOOT = 34;
+    public static final float shootingAngle = -164;
+//    public static final float angle1 = -160;
+//    public static final float angle2 = -164;
+//    public static final float angle3 = -170;
 
     GoalBot bot = new GoalBot();
 
@@ -42,28 +43,36 @@ public class RedAutonomous2 extends GoalBotAutonomous {
             telemetry.addData("heading = ", bot.getHeadingRadians() * (180/Math.PI));
             telemetry.update();
         }
-        bot.setShooterPowerNormal();
+        bot.setShooterPower(.7f);
         rings = getRings(true);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);
-        turnToHeading(angle1, 1, 6, 45);
+        turnToHeading(shootingAngle, 1, 6, 45);
         shoot1();
         bot.setIntake(GoalBot.IntakeState.FWD);
 //        telemetry.addData("shot 1", "");
 //        telemetry.update();
-        turnToHeading(angle2,1, 6, 45);
+//        turnToHeading(angle2,1, 6, 45);
+        sleep(150);
         bot.setRingKickerEngaged();
-        shoot1();
+        sleep(150);
+        shoot2();
 //        telemetry.addData("shot 2", "");
 //        telemetry.update();
-        turnToHeading(angle3,1, 6, 45);
-        shoot1();
+//        turnToHeading(angle3,1, 6, 45);
+        sleep(300);
+        shoot2();
         bot.setRingKickerUnengaged();
 //        telemetry.addData("shot 3", "");
 //        telemetry.update();
 
         turnToHeading(-90, 5, 8, 60);
-        float x;
+        if (rings == Rings.ONE) {
+            driveToPosition(36,6, bot.getPose().x,48,-90,2,1);
+        } else {
+            driveToPosition(36,6, bot.getPose().x,24,-90,2,1);
+        }
         float y;
+        float x;
         if(rings == Rings.ZERO){
             x = 75;
             y = 27;

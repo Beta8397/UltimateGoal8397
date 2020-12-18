@@ -45,7 +45,7 @@ public class MecBot {
     /*
      * The BNO055Enhanced (gyro)
      */
-    BNO055Enhanced imu;
+    public BNO055Enhanced imu;
 
     /*
      * The heading offset (this gives us flexibility in specifying the world coordinate system).
@@ -120,7 +120,7 @@ public class MecBot {
      * Obtain instances of the robot hardware using the hardware map, and initialize the BNO055IMU
      * @param hwMap
      */
-    public void init(HardwareMap hwMap) {
+    public boolean init(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotorEx.class, "front_left_motor");
         frontRight = hwMap.get(DcMotorEx.class, "front_right_motor");
         backLeft = hwMap.get(DcMotorEx.class, "back_left_motor");
@@ -158,7 +158,7 @@ public class MecBot {
         parameters.axesMap = AXES_MAP;
         parameters.axesSign = AXES_SIGN;
 
-        imu.initialize(parameters);
+        return imu.initialize(parameters);
     }
 
     /**

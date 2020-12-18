@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
-import com.google.gson.internal.$Gson$Types;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraDevice;
@@ -38,16 +37,16 @@ public class RedAutonomous1 extends GoalBotAutonomous {
         rings = getRings(true);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);
         turnToHeading(angle1, 1, 6, 45);
-        shoot();
+        shoot1();
         bot.setIntake(GoalBot.IntakeState.FWD);
 //        telemetry.addData("shot 1", "");
 //        telemetry.update();
         turnToHeading(angle2,1, 6, 45);
-        shoot();
+        shoot1();
 //        telemetry.addData("shot 2", "");
 //        telemetry.update();
         turnToHeading(angle3,1, 6, 45);
-        shoot();
+        shoot1();
 //        telemetry.addData("shot 3", "");
 //        telemetry.update();
 

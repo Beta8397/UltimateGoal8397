@@ -17,6 +17,7 @@ public class GoalBot extends MecBot {
     public static final float SHOOTER_POWER_NORMAL = 0.75f;
     public static final float SHOOTER_POWER_HIGH = 0.9f;
     public static final float KICKER_ENGAGED = 0.14f;
+    public static final float KICKER_HALF_ENGAGED = 0.18f;
     public static final float KICKER_UNENGAGED = 0.35f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
@@ -38,8 +39,8 @@ public class GoalBot extends MecBot {
     }
 
 
-    public void init(HardwareMap hwMap){
-        super.init(hwMap);
+    public boolean init(HardwareMap hwMap){
+        boolean result = super.init(hwMap);
         intakeFront = hwMap.get(DcMotorEx.class, "intake front");
         intakeBack = hwMap.get(DcMotorEx.class, "intake back");
         intakeFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -53,6 +54,7 @@ public class GoalBot extends MecBot {
         shooter.setDirection(DcMotorSimple.Direction.REVERSE );
         kicker = hwMap.get(Servo.class, "kicker");
         ringKicker = hwMap.get(Servo.class, "ring kicker");
+        return result;
     }
 
     public void setArmMode(DcMotor.RunMode Mode){
@@ -106,6 +108,8 @@ public class GoalBot extends MecBot {
     public void setKickerEngaged() {
         setKickerPosition(KICKER_ENGAGED);
     }
+
+    public void setKickerHalfEngaged() { setKickerPosition(KICKER_HALF_ENGAGED); }
 
     public void setKickerUnengaged() {
         setKickerPosition(KICKER_UNENGAGED);
