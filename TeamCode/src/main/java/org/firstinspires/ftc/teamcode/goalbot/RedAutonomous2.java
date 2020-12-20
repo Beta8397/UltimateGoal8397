@@ -23,7 +23,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
     Rings rings = Rings.ZERO;
 
     public void runOpMode() {
-        boolean imuInitialized = bot.init(hardwareMap);
+        imuInitialized = bot.init(hardwareMap);
         super.setBot(bot);
         VuforiaNavigator.activate(null, null);
         sleep(3000);
@@ -34,14 +34,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
         bot.setGrabberClosed();
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
         bot.setArmPosition(50);
-        while (!opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("imu initialized = ", imuInitialized);
-            telemetry.addData("imu status = ", bot.imu.getSystemStatus());
-            BNO055IMU.CalibrationStatus calibStatus = bot.imu.getCalibrationStatus();
-            telemetry.addData("cs = ", calibStatus.toString());
-            telemetry.addData("heading = ", bot.getHeadingRadians() * (180/Math.PI));
-            telemetry.update();
-        }
+        testGyroAndWaitForStart();
         bot.setShooterPowerNormal();
         rings = getRings(true);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);

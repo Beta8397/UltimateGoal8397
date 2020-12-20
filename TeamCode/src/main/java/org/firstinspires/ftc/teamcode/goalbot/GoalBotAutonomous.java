@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Predicate;
@@ -16,6 +17,7 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
     }
 
     GoalBot bot;
+    protected boolean imuInitialized = false;
 
     HSV_Range HSV_RANGE = new HSV_Range(20,35,0.4f,1,0.4f,1);
 
@@ -23,6 +25,17 @@ public abstract class GoalBotAutonomous extends MecBotAutonomous {
         this.bot = bot;
         super.setBot(bot);
 
+    }
+
+    public void testGyroAndWaitForStart() {
+        while (!opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("imu initialized = ", imuInitialized);
+            telemetry.addData("imu status = ", bot.imu.getSystemStatus());
+            BNO055IMU.CalibrationStatus calibStatus = bot.imu.getCalibrationStatus();
+            telemetry.addData("cs = ", calibStatus.toString());
+            telemetry.addData("heading = ", bot.getHeadingRadians() * (180/Math.PI));
+            telemetry.update();
+        }
     }
 
     public Rings getRings(boolean saveImage) {

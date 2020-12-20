@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.mecbot.MecBotTeleOp;
+import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.gamepad.ButtonToggle;
 
 @TeleOp(name = "GoalBotTeleOp", group = "GoalBot")
@@ -17,6 +18,8 @@ public class GoalbotTeleop extends MecBotTeleOp {
     GoalBot bot= new GoalBot();
 
     private GoalBot.IntakeState intakeState = GoalBot.IntakeState.OFF;
+
+    private AutoDrive autoDrive = null;
 
     ButtonToggle toggleRightBumper1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
@@ -68,6 +71,19 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad2.dpad_up;
         }
     };
+    ButtonToggle toggleA1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad1.a;
+        }
+    };
+    ButtonToggle toggleB1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad1.b;
+        }
+    };
+
 
     private boolean grabberClosed = true;
     private boolean shooterOn = false;
@@ -182,11 +198,81 @@ public class GoalbotTeleop extends MecBotTeleOp {
                 bot.setKickerUnengaged();
             }
 
+            if (toggleA1.update()) {
+                bot.setPose(9, 9, 180);
+            }
+            bot.updateOdometry();
 
+            if (toggleB1.update()) {
+                autoDrive = new AutoDrive(36, 34, -164, 18, 4, 2, 6, 1, 1);
+            }
+
+            if (autoDrive != null){
+                if (gamepad1.b) {
+                    autoDrive.update();
+                } else {
+                    autoDrive = null;
+                    bot.setDrivePower(0,0,0);
+                }
+            }
 
             doDriveControl();
             telemetry.update();
 
+        }
+    }
+
+    private class AutoDrive {
+        float targetX, targetY, targetHeadingRadians, vMax, vMin, propCoeffXY, propCoeffHeading, toleranceXY, toleranceRadians;
+        final float VA_MAX = (float) Math.toRadians(60);
+        final float VA_MIN = (float) Math.toRadians(5);
+        public AutoDrive(float tX, float tY, float tHD, float vMax, float vMin, float pCXY, float pCH, float tolXY, float tolD){
+            targetX = tX;
+            targetY = tY;
+            targetHeadingRadians =(float) Math.toRadians(tHD);
+            this.vMax = vMax;
+            this.vMin = vMin;
+            propCoeffXY = pCXY;
+            propCoeffHeading = pCH;
+            toleranceXY = tolXY;
+            toleranceRadians = (float) Math.toRadians(tolD);
+        }
+
+        public void update(){
+            float xError = targetX - bot.getPose().x;
+            float yError = targetY - bot.getPose().y;
+            float thetaError = (float) AngleUtils.normalizeRadians(targetHeadingRadians - bot.getPose().theta);
+
+            float sinTheta = (float)Math.sin(bot.getPose().theta);
+            float cosTheta = (float)Math.cos(bot.getPose().theta);
+
+            float xErrorRobot = xError * sinTheta - yError * cosTheta;
+            float yErrorRobot = xError * cosTheta + yError * sinTheta;
+
+            float vx = xErrorRobot * propCoeffXY;
+            float vy = yErrorRobot * propCoeffXY;
+            float v = (float)Math.hypot(vx, vy);
+            if (Math.hypot(xError, yError) < toleranceXY) {
+                vx = 0;
+                vy = 0;
+            } else if(v > vMax) {
+                vx *= vMax / v;
+                vy *= vMax / v;
+            } else if(v < vMin) {
+                vx *= vMin / v;
+                vy *= vMin / v;
+            }
+
+            float va = propCoeffHeading*thetaError;
+            if (bot.getPose().x < 15 || bot.getPose().y < 15 || Math.abs(thetaError) < toleranceRadians) {
+                va = 0;
+            } else if (Math.abs(va) > VA_MAX) {
+                va = Math.signum(va) * VA_MAX;
+            }else if (Math.abs(va) < VA_MIN) {
+                va = Math.signum(va) * VA_MIN;
+            }
+
+            bot.setDriveSpeed(vx, vy, va);
         }
     }
 
