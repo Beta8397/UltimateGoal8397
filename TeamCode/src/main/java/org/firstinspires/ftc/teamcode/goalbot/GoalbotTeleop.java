@@ -83,6 +83,12 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad1.b;
         }
     };
+    ButtonToggle toggleX1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad1.x;
+        }
+    };
 
 
     private boolean grabberClosed = true;
@@ -90,6 +96,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
     private boolean shooterHigh = false;
     private boolean shooting = false;
     private boolean ringStuck = true;
+    private boolean adjustmode = false;
     private ElapsedTime shootingTimer= new ElapsedTime();
     private enum ArmPos{
         IN, UP, OUT
@@ -207,19 +214,42 @@ public class GoalbotTeleop extends MecBotTeleOp {
                 autoDrive = new AutoDrive(36, 34, -164, 18, 4, 2, 6, 1, 1);
             }
 
-            if (autoDrive != null){
+            if (toggleX1.update()) {
+                adjustmode = !adjustmode;
+            }
+            telemetry.addData("adjust mode =", adjustmode);
+            telemetry.addData("auto drive mode", autoDrive != null);
+
+            if (autoDrive != null) {
                 if (gamepad1.b) {
                     autoDrive.update();
                 } else {
                     autoDrive = null;
                     bot.setDrivePower(0,0,0);
                 }
-            }
-
-            doDriveControl();
+            } else if (adjustmode) {
+                oneAdjustmentCycle();
+            } else {
+                doDriveControl();
+             }
             telemetry.update();
 
         }
+    }
+
+    private void oneAdjustmentCycle() {
+        float px = gamepad1.left_stick_x / 4;
+        float py = -gamepad1.left_stick_y / 4;
+        float heading = bot.getPose().theta;
+
+        float sin = (float) Math.sin(heading);
+        float cos = (float) Math.cos(heading);
+        float pxr = px * sin - py * cos;
+        float pyr = px * cos + py * sin;
+        float angleOffset = (float) AngleUtils.normalizeRadians(Math.toRadians(-164) - heading);
+        float pa = angleOffset / (float) Math.PI;
+        bot.setDrivePower(pxr, pyr, pa);
+
     }
 
     private class AutoDrive {
