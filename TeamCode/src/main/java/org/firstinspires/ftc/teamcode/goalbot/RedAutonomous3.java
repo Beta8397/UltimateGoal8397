@@ -62,12 +62,12 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         if (rings == Rings.ONE) {
             driveToPosition(36,6, bot.getPose().x,48,-90,2,1);
         } else {
-            driveToPosition(36,6, bot.getPose().x,24,-90,2,1);
+            driveToPosition(36,6, bot.getPose().x + 7,24,-90,2,1);
         }
         float y;
         float x;
         if(rings == Rings.ZERO){
-            x = 75;
+            x = 74;
             y = 27;
         } else if(rings == Rings.ONE){
             x = 97;
@@ -92,10 +92,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         bot.setArmPosition(610);
         //drive to pick up second wobble.
         if (rings == Rings.ZERO) {
-            driveToPosition(36, 6, 36, 29, 180, 2, 1);
+            driveToPosition(36, 6, 36, 32, 180, 2, 1);
         } else if (rings == Rings.ONE){
-            driveToPosition(36, 6, bot.getPose().x - 24, 29, 180, 2, 6 );
-            driveToPosition(36, 6, 36, 29, 180, 2, 1);
+            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
+            driveToPosition(36, 6, 36, 32, 180, 2, 1);
         } else {
             bot.setIntake(GoalBot.IntakeState.REV);
             driveToPosition(36, 6, 16, 42, -90, 2, 1);
@@ -109,10 +109,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         if (rings != Rings.FOUR) {
             turnToHeading(-90, 4,8, 60);
         }
-        if (rings != Rings.ZERO) {
-            x = x - 7;
-        }
-        driveToPosition(36,6,x,y,-90,2,1);
+
+        x = x - 5;
+
+        driveToPosition(36, 6, x, y, -90, 2, 1);
         bot.setArmPosition(470);
         sleep(300);
         bot.setGrabberOpen();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mecbot;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -7,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.CubicSpline2D;
 import org.firstinspires.ftc.teamcode.util.ParametricFunction2D;
+
+import java.util.List;
 
 /**
  * An abstract class that extends LinearOpMode and provides navigation methods that can be called by autonomous op modes

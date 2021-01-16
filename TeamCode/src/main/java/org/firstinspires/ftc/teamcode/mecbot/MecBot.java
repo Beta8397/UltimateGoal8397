@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mecbot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.i2c.BNO055Enhanced;
 import org.firstinspires.ftc.teamcode.util.Pose;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
+
+import java.util.List;
 
 /**
  * The MechBot class represents a mecanum-wheeled robot with a BNO055IMU and a color sensor. It has methods
@@ -55,7 +58,7 @@ public class MecBot {
     /*
      * The current pose of the robot
      */
-    private Pose pose = new Pose(0, 0, 0);
+    protected Pose pose = new Pose(0, 0, 0);
 
     /*
      * The most recent previous readings of the drive motor ticks
@@ -121,6 +124,13 @@ public class MecBot {
      * @param hwMap
      */
     public boolean init(HardwareMap hwMap) {
+
+//            List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+//
+//            for (LynxModule module : allHubs) {
+//                module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+//            }
+
         frontLeft = hwMap.get(DcMotorEx.class, "front_left_motor");
         frontRight = hwMap.get(DcMotorEx.class, "front_right_motor");
         backLeft = hwMap.get(DcMotorEx.class, "back_left_motor");
