@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
+import org.firstinspires.ftc.teamcode.util.MotionProfile;
 
 @Autonomous(name = "red auto3", group = "red")
 public class RedAutonomous3 extends GoalBotAutonomous {
@@ -40,27 +41,43 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         rings = getRings(true);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);
         turnToHeading(shootingAngle, 1, 6, 45);
-        shoot1();
+//        shoot1();
+//        //bot.setIntake(GoalBot.IntakeState.FWD);
+////        telemetry.addData("shot 1", "");
+////        telemetry.update();
+////        turnToHeading(angle2,1, 6, 45);
+//        sleep(150);
+//        bot.setRingKickerEngaged();
+//        sleep(150);
+//        shoot2();
+////        telemetry.addData("shot 2", "");
+////        telemetry.update();
+////        turnToHeading(angle3,1, 6, 45);
+//        sleep(300);
+//        shoot2();
+//        bot.setRingKickerUnengaged();
+////        telemetry.addData("shot 3", "");
+////        telemetry.update();
+
+        bot.setKickerEngaged();
+        sleep(500);
+        bot.setKickerUnengaged();
+        sleep(500);
+
+        bot.setKickerEngaged();
+        sleep(500);
+        bot.setKickerUnengaged();
+        sleep(500);
+
+        bot.setKickerEngaged();
+        sleep(500);
+        bot.setKickerUnengaged();
+
         bot.setIntake(GoalBot.IntakeState.FWD);
-//        telemetry.addData("shot 1", "");
-//        telemetry.update();
-//        turnToHeading(angle2,1, 6, 45);
-        sleep(150);
-        bot.setRingKickerEngaged();
-        sleep(150);
-        shoot2();
-//        telemetry.addData("shot 2", "");
-//        telemetry.update();
-//        turnToHeading(angle3,1, 6, 45);
-        sleep(300);
-        shoot2();
-        bot.setRingKickerUnengaged();
-//        telemetry.addData("shot 3", "");
-//        telemetry.update();
 
         turnToHeading(-90, 5, 8, 60);
         if (rings == Rings.ONE) {
-            driveToPosition(36,6, bot.getPose().x,48,-90,2,1);
+            driveToPosition(36,6, bot.getPose().x,53,-90,2,1);
         } else {
             driveToPosition(36,6, bot.getPose().x + 7,24,-90,2,1);
         }
@@ -71,7 +88,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
             y = 27;
         } else if(rings == Rings.ONE){
             x = 97;
-            y = 51;
+            y = 53;
         } else{
             x = 123;
             y = 27;
@@ -80,7 +97,12 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         //Drive to drop off first wobble.
 
         bot.setArmPosition(470);
-        driveToPosition(36,6,x,y,-90,2,1);
+        if(rings == Rings.ONE) {
+            driveToPosition(new MotionProfile(6, 36, 15), x, y, -90, 1);
+        } else {
+            driveToPosition(36,6,x,y,-90,2,1);
+        }
+        //driveToPosition(36,6,x,y,-90,2,1);
         bot.setGrabberOpen();
         sleep(300);
         bot.setArmPosition(0);
@@ -94,8 +116,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         if (rings == Rings.ZERO) {
             driveToPosition(36, 6, 36, 32, 180, 2, 1);
         } else if (rings == Rings.ONE){
-            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
-            driveToPosition(36, 6, 36, 32, 180, 2, 1);
+//            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
+//            driveToPosition(36, 6, 36, 32, 180, 2, 1);
+            driveToPosition(new MotionProfile(6, 36, 15), bot.getPose().x - 24, 36, 180, 6 );
+            driveToPosition(new MotionProfile(6, 36, 15), 36, 36, 180, 1);
         } else {
             bot.setIntake(GoalBot.IntakeState.REV);
             driveToPosition(36, 6, 16, 42, -90, 2, 1);
@@ -111,8 +135,14 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         }
 
         x = x - 5;
+        y = y + 4;
 
-        driveToPosition(36, 6, x, y, -90, 2, 1);
+        if(rings == Rings.ONE) {
+            driveToPosition(new MotionProfile(6, 36, 15), x, y, -90, 1);
+        } else {
+            driveToPosition(36, 6, x, y, -90, 2, 1);
+        }
+        //driveToPosition(36, 6, x, y, -90, 2, 1);
         bot.setArmPosition(470);
         sleep(300);
         bot.setGrabberOpen();

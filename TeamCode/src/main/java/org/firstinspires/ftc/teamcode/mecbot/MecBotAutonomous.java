@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.CubicSpline2D;
+import org.firstinspires.ftc.teamcode.util.MotionProfile;
 import org.firstinspires.ftc.teamcode.util.ParametricFunction2D;
 
 import java.util.List;
@@ -228,6 +229,45 @@ public abstract class MecBotAutonomous extends LinearOpMode {
                 vx *= vMin / v;
                 vy *= vMin / v;
             }
+            float va = HEADING_CORRECTION_FACTOR * thetaError;
+            bot.setDriveSpeed(vx, vy, va);
+        }
+        bot.setDriveSpeed(0, 0,0);
+        bot.updateOdometry();
+    }
+
+    protected void driveToPosition(MotionProfile mProf, float targetX, float targetY, float targetThetaDegrees, float tolerance) {
+        float headingTargetRadians = targetThetaDegrees * (float)Math.PI / 180;
+
+        bot.updateOdometry();
+        float x0 = bot.getPose().x;
+        float y0 = bot.getPose().y;
+
+        while (opModeIsActive()) {
+            bot.updateOdometry();
+            float d0 = (float)Math.hypot(bot.getPose().y - y0, bot.getPose().x - x0);
+
+            float xError = targetX - bot.getPose().x;
+            float yError = targetY - bot.getPose().y;
+            float d1 = (float)Math.hypot(xError, yError);
+            float thetaError = (float)AngleUtils.normalizeRadians(headingTargetRadians - bot.getPose().theta);
+
+            if(d1 < tolerance) break;
+
+            float sinTheta = (float)Math.sin(bot.getPose().theta);
+            float cosTheta = (float)Math.cos(bot.getPose().theta);
+
+            float xErrorRobot = xError * sinTheta - yError * cosTheta;
+            float yErrorRobot = xError * cosTheta + yError * sinTheta;
+
+            float v0 = (float)Math.sqrt(mProf.vMin * mProf.vMin + 2 * mProf.accel * d0);
+            float v1 = (float)Math.sqrt(mProf.vMin * mProf.vMin + 2 * mProf.accel * d1);
+            float v = Math.min(v0, v1);
+            v = Math.min(v, mProf.vMax);
+
+            float vx = xErrorRobot * v / d1;
+            float vy = yErrorRobot * v / d1;
+
             float va = HEADING_CORRECTION_FACTOR * thetaError;
             bot.setDriveSpeed(vx, vy, va);
         }
