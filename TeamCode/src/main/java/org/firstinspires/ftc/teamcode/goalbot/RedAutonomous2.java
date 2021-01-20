@@ -22,7 +22,7 @@ public class RedAutonomous2 extends GoalBotAutonomous {
 
     Rings rings = Rings.ZERO;
 
-    public void runOpMode() {
+    public void runLoggingOpMode() {
         imuInitialized = bot.init(hardwareMap);
         super.setBot(bot);
         VuforiaNavigator.activate(null, null);

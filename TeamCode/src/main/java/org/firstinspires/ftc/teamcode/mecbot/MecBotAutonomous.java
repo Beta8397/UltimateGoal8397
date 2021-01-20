@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.teamcode.logging.LoggingLinearOpMode;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.CubicSpline2D;
 import org.firstinspires.ftc.teamcode.util.MotionProfile;
@@ -16,7 +17,7 @@ import java.util.List;
  * An abstract class that extends LinearOpMode and provides navigation methods that can be called by autonomous op modes
  * that utilize a MechBot object.
  */
-public abstract class MecBotAutonomous extends LinearOpMode {
+public abstract class MecBotAutonomous extends LoggingLinearOpMode {
 
     public static final float STD_TURN_COEFF = 2.0f;        //Proportionate coefficient for turning
     private final float HEADING_CORRECTION_FACTOR = 2.0f;

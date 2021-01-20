@@ -29,7 +29,7 @@ public class TestStack extends GoalBotAutonomous {
         }
     };
 
-    public void runOpMode() {
+    public void runLoggingOpMode() {
         bot.init(hardwareMap);
         super.setBot(bot);
         VuforiaNavigator.activate(null, null);
