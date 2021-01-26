@@ -70,9 +70,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
         bot.setKickerEngaged();
+        bot.setRingKickerEngaged();
         sleep(500);
         bot.setKickerUnengaged();
-        bot.setRingKickerEngaged();
+        //bot.setRingKickerEngaged();
         sleep(500);
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
