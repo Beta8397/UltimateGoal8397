@@ -211,7 +211,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
             bot.updateOdometry();
 
             if (toggleB1.update()) {
-                autoDrive = new AutoDrive(36, 34, -164, 18, 4, 2, 6, 1, 1);
+                autoDrive = new AutoDrive(36, 34, -160, 18, 4, 2, 6, 1, 1);
             }
 
             if (toggleX1.update()) {
@@ -219,6 +219,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
             telemetry.addData("adjust mode =", adjustmode);
             telemetry.addData("auto drive mode", autoDrive != null);
+            telemetry.addData("Heading", Math.toDegrees(bot.getPose().theta));
 
             if (autoDrive != null) {
                 if (gamepad1.b) {

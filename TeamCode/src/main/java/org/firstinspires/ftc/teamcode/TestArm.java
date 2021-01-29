@@ -13,12 +13,22 @@ public class TestArm extends LinearOpMode {
 
     public void runOpMode() {
         bot.init(hardwareMap);
-        bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bot.setArmPosition(0);
+//        bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
+        float target = 0;
+//        bot.setArmPosition(0);
         waitForStart();
         while (opModeIsActive()) {
-            float target = (1-gamepad1.left_stick_y) * 280;
-            bot.setArmPosition((int) target);
+            if (gamepad1.y) {
+                target++;
+            } else if(gamepad1.a) {
+                target--;
+            }
+            if (target > 280) {
+                target = 280;
+            } else if (target < 0) {
+                target = 0;
+            }
+//            bot.setArmPosition((int) target);
             telemetry.addData("target =", target);
             telemetry.addData("ticks =", bot.armMotor.getCurrentPosition());
             telemetry.update();

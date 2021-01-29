@@ -123,7 +123,8 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         bot.setArmPosition(610);
         //drive to pick up second wobble.
         if (rings == Rings.ZERO) {
-            driveToPosition(36, 6, 36, 32, 180, 2, 1);
+            driveToPosition(36, 6, 34, 35, 180, 2, 1);
+            turnToHeading(-170, 3,8,60);
         } else if (rings == Rings.ONE){
 //            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
 //            driveToPosition(36, 6, 36, 32, 180, 2, 1);
