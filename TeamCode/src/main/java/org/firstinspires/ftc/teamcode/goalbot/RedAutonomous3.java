@@ -133,9 +133,9 @@ public class RedAutonomous3 extends GoalBotAutonomous {
             turnToHeading(-170, 3,8,60);
         } else {
             bot.setIntake(GoalBot.IntakeState.REV);
-            driveToPosition(36, 6, 16, 42, -90, 2, 1);
-            driveToPosition(36, 6, 19, 42, -90, 2, 1);
-            driveToPosition(36, 6, 19, 34.5f, -90, 2, 1);
+            driveToPosition(36, 6, 16, 44, -90, 2, 1);
+            driveToPosition(36, 6, 19, 44, -90, 2, 1);
+            driveToPosition(36, 6, 19, 35.5f, -90, 2, 1);
         }
         bot.setGrabberClosed();
         sleep(500);
@@ -151,8 +151,8 @@ public class RedAutonomous3 extends GoalBotAutonomous {
             x = x - 7;
             y = y + 9;
         } else {
-            x = x - 9;
-            y = y + 9;
+            x = x - 7;
+            y = y + 7;
         }
 
         if(rings == Rings.ONE) {
