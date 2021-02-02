@@ -52,11 +52,11 @@ public abstract class MecBotTeleOp extends LinearOpMode {
             return gamepad1.dpad_left;
         }
     };
-    private ButtonToggle toggleY = new ButtonToggle(ButtonToggle.Mode.RELEASED) {
-        protected boolean getButtonState() {
-            return gamepad1.y;
-        }
-    };
+//    private ButtonToggle toggleY = new ButtonToggle(ButtonToggle.Mode.RELEASED) {
+//        protected boolean getButtonState() {
+//            return gamepad1.y;
+//        }
+//    };
 
     protected static final float SLOW_MODE_SCALER = 5.0f;
     protected static final float FAST_MODE_SCALER =1.5f;
@@ -81,7 +81,8 @@ public abstract class MecBotTeleOp extends LinearOpMode {
         }
         if (toggleD1down.update()) quadMode = !quadMode;
         if (toggleD1left.update()) telemetryEnabled = !telemetryEnabled;
-        if (toggleY.update()) fieldCentric = !fieldCentric;
+        // We won't be using field centric for now, so we can use gamepad1.y
+        // if (toggleY.update()) fieldCentric = !fieldCentric;
 
         px = gamepad1.left_stick_x;
         py = -gamepad1.left_stick_y;

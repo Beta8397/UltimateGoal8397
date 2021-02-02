@@ -20,6 +20,9 @@ public class GoalbotTeleop extends MecBotTeleOp {
     private GoalBot.IntakeState intakeState = GoalBot.IntakeState.OFF;
 
     private AutoDrive autoDrive = null;
+    private AutoDrive autoDrive2 = null;
+    private boolean autoTurn = false;
+    private float autoTurnTarget = 0;
 
     ButtonToggle toggleRightBumper1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
@@ -87,6 +90,18 @@ public class GoalbotTeleop extends MecBotTeleOp {
         @Override
         protected boolean getButtonState() {
             return gamepad1.x;
+        }
+    };
+    ButtonToggle toggleY1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad1.y;
+        }
+    };
+    ButtonToggle toggleDpadRight1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad1.dpad_right;
         }
     };
 
@@ -210,8 +225,16 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
             bot.updateOdometry();
 
-            if (toggleB1.update()) {
+            if (toggleB1.update() && autoDrive2 == null && !autoTurn) {
                 autoDrive = new AutoDrive(36, 34, -160, 18, 4, 2, 6, 1, 1);
+            }
+
+            if (toggleY1.update() && autoDrive == null && !autoTurn) {
+                autoDrive2 = new AutoDrive(67.5f, 59f, -156, 18, 4, 2, 6, 1, 1);
+            }
+
+            if (toggleDpadRight1.update() && autoDrive == null && autoDrive2 == null) {
+                autoTurnTarget = (float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5));
             }
 
             if (toggleX1.update()) {
@@ -226,8 +249,24 @@ public class GoalbotTeleop extends MecBotTeleOp {
                     autoDrive.update();
                 } else {
                     autoDrive = null;
+                    bot.setDrivePower(0, 0, 0);
+                }
+            } else if (autoDrive2 != null) {
+                if (gamepad1.y) {
+                    autoDrive2.update();
+                } else {
+                    autoDrive2 = null;
+                    bot.setDrivePower(0, 0, 0);
+                }
+            } else if (autoTurn) {
+                if (gamepad1.dpad_right) {
+                    float offSet = (float) AngleUtils.normalizeRadians(autoTurnTarget - bot.getPose().theta);
+                    bot.setDriveSpeed(0, 0, 6 * offSet);
+                } else {
+                    autoTurn = false;
                     bot.setDrivePower(0,0,0);
                 }
+
             } else if (adjustmode) {
                 oneAdjustmentCycle();
             } else {
