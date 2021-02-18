@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.mecbot.MecBotTeleOp;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
+import org.firstinspires.ftc.teamcode.util.Updatable;
 import org.firstinspires.ftc.teamcode.util.gamepad.ButtonToggle;
 
 @TeleOp(name = "GoalBotTeleOp", group = "GoalBot")
@@ -19,10 +20,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
 
     private GoalBot.IntakeState intakeState = GoalBot.IntakeState.OFF;
 
-    private AutoDrive autoDrive = null;
-    private AutoDrive autoDrive2 = null;
-    private boolean autoTurn = false;
-    private float autoTurnTarget = 0;
+    private Updatable autoDrive = null;
 
     ButtonToggle toggleRightBumper1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
@@ -225,16 +223,12 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
             bot.updateOdometry();
 
-            if (toggleB1.update() && autoDrive2 == null && !autoTurn) {
-                autoDrive = new AutoDrive(36, 34, -160, 18, 4, 2, 6, 1, 1);
-            }
-
-            if (toggleY1.update() && autoDrive == null && !autoTurn) {
-                autoDrive2 = new AutoDrive(67.5f, 59f, -156, 18, 4, 2, 6, 1, 1);
-            }
-
-            if (toggleDpadRight1.update() && autoDrive == null && autoDrive2 == null) {
-                autoTurnTarget = (float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5));
+            if (toggleB1.update() && autoDrive == null) {
+                autoDrive = new AutoDrive(36, 34, -162, 18, 4, 2, 6, 1, 1);
+            } else if (toggleY1.update() && autoDrive == null) {
+                autoDrive = new AutoDrive(67.5f, 59f, -156, 18, 4, 2, 6, 1, 1);
+            } else if (toggleDpadRight1.update() && autoDrive == null ) {
+                autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5)));
             }
 
             if (toggleX1.update()) {
@@ -245,28 +239,12 @@ public class GoalbotTeleop extends MecBotTeleOp {
             telemetry.addData("Heading", Math.toDegrees(bot.getPose().theta));
 
             if (autoDrive != null) {
-                if (gamepad1.b) {
+                if (gamepad1.b || gamepad1.y || gamepad1.dpad_right) {
                     autoDrive.update();
                 } else {
                     autoDrive = null;
                     bot.setDrivePower(0, 0, 0);
                 }
-            } else if (autoDrive2 != null) {
-                if (gamepad1.y) {
-                    autoDrive2.update();
-                } else {
-                    autoDrive2 = null;
-                    bot.setDrivePower(0, 0, 0);
-                }
-            } else if (autoTurn) {
-                if (gamepad1.dpad_right) {
-                    float offSet = (float) AngleUtils.normalizeRadians(autoTurnTarget - bot.getPose().theta);
-                    bot.setDriveSpeed(0, 0, 6 * offSet);
-                } else {
-                    autoTurn = false;
-                    bot.setDrivePower(0,0,0);
-                }
-
             } else if (adjustmode) {
                 oneAdjustmentCycle();
             } else {
@@ -292,7 +270,18 @@ public class GoalbotTeleop extends MecBotTeleOp {
 
     }
 
-    private class AutoDrive {
+    private class AutoTurn implements Updatable {
+        private float autoTurnTarget;
+        public AutoTurn(float target) {
+            autoTurnTarget = target;
+        }
+        public void update() {
+            float offSet = (float) AngleUtils.normalizeRadians(autoTurnTarget - bot.getPose().theta);
+            bot.setDriveSpeed(0, 0, 6 * offSet);
+        }
+    }
+
+    private class AutoDrive implements Updatable {
         float targetX, targetY, targetHeadingRadians, vMax, vMin, propCoeffXY, propCoeffHeading, toleranceXY, toleranceRadians;
         final float VA_MAX = (float) Math.toRadians(60);
         final float VA_MIN = (float) Math.toRadians(5);

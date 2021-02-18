@@ -143,6 +143,13 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         //Turn robot, then drive to drop off second wobble.
         if (rings != Rings.FOUR) {
             turnToHeading(-90, 6,8, 60);
+//            turnToHeading(-90, 6, 8, 60,
+//                    new Action() {
+//                        @Override
+//                        public void update() {
+//                            float pos = bot.getArmActualPos();
+//                        }
+//                    });
         }
         if (rings == Rings.ONE) {
             x = x - 9;

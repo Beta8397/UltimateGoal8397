@@ -19,13 +19,13 @@ public class GoalBot extends MecBot {
     public static final float SHOOTER_POWER_HIGH = 0.9f;
     public static final float KICKER_ENGAGED = 0.14f;
     public static final float KICKER_HALF_ENGAGED = 0.18f;
-    public static final float KICKER_UNENGAGED = 0.36f;
+    public static final float KICKER_UNENGAGED = 0.34f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
-    public static final int ENCODER_TICKS_PER_ROTATION = 280;
-    public static final float ENCODER_WHEEL_CIRCUMFERENCE = (float)Math.PI * 4;
-    public static final float ENCODER_DISTANCE = 10;
-    public static final float SIDE_ENCODER_OFFSET = 0;
+    public static final float LEFT_X= 1000;
+    public static final float RIGHT_X = 1000;
+    public static final float X_TICKS_PER_RADIAN = 0;
+    public static final float TICKS_PER_INCH = 500;
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
@@ -78,13 +78,10 @@ public class GoalBot extends MecBot {
         rightTicks = rightCurrentTicks;
         leftTicks = leftCurrentTicks;
         sideTicks = sideCurrentTicks;
-        float rightDist = (rightNewTicks / ENCODER_TICKS_PER_ROTATION) * ENCODER_WHEEL_CIRCUMFERENCE;
-        float leftDist = (leftNewTicks / ENCODER_TICKS_PER_ROTATION) * ENCODER_WHEEL_CIRCUMFERENCE;
-        float sideDist = (sideNewTicks / ENCODER_TICKS_PER_ROTATION) * ENCODER_WHEEL_CIRCUMFERENCE;
-        float dyR = (rightDist + leftDist) / 2;
-        float dT = (rightDist - leftDist) / ENCODER_DISTANCE;
-        float sideEncoderAngleDist = -SIDE_ENCODER_OFFSET * dT;
-        float dxR = sideDist - sideEncoderAngleDist;
+        float dyR = (LEFT_X * rightNewTicks + RIGHT_X * leftNewTicks) / ((LEFT_X + RIGHT_X) * TICKS_PER_INCH);
+        float dT = (rightNewTicks - leftNewTicks) / (LEFT_X + RIGHT_X);
+        float sideEncoderAngleTicks = X_TICKS_PER_RADIAN * dT;
+        float dxR = (sideNewTicks - sideEncoderAngleTicks) / TICKS_PER_INCH;
         float avgHeading = (float)AngleUtils.normalizeRadians(pose.theta + 0.5 * dT);
 
         float dX = dxR * (float)Math.sin(avgHeading) + dyR * (float)Math.cos(avgHeading);
