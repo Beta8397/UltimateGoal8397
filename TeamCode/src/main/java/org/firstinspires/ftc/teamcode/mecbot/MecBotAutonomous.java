@@ -190,6 +190,93 @@ public abstract class MecBotAutonomous extends LoggingLinearOpMode {
         bot.setDriveSpeed(0, 0, 0);
     }
 
+    /**
+     * Drive spline while turning from initial heading to requested final heading.
+     * The turn happens during the middle "turnFraction" of the total path length of the spline.
+     * At the end there is a brief adjustment of position to the final point in the spline.
+     *
+     * @param motionProfile     vMin, vMax, and accel for the operation
+     * @param turnFraction      The fraction of the total path length over which the turn occurs
+     * @param finalHeadingDegrees   Requested final heading
+     * @param tol                   Tolerance for end point
+     * @param spline                The 2D cubic spline
+     */
+    protected void driveSpline(MotionProfile motionProfile, float turnFraction, float finalHeadingDegrees, float adjDist, float tol, CubicSpline2D spline) {
+        spline.setIndex(0);
+        float s0 = 0;
+
+        float totalPathLength = spline.getTotalPathLength();
+        float turnPathLength = turnFraction * totalPathLength;
+        float preTurnPathLength = (totalPathLength - turnPathLength) / 2.0f;
+        float finalHeadingRadians = (float)Math.toRadians(finalHeadingDegrees);
+        float initHeadingRadians = bot.updateOdometry().theta;
+        float turnRadians = (float)AngleUtils.normalizeRadians(finalHeadingRadians - initHeadingRadians);
+        float radiansPerInch = turnRadians / turnPathLength;
+        float vMinSquared = motionProfile.vMin * motionProfile.vMin;
+        float finalX = spline.getPoints()[spline.getNumSegments()].get(0);
+        float finalY = spline.getPoints()[spline.getNumSegments()].get(1);
+
+        // Drive the spline
+        while (opModeIsActive()) {
+            bot.updateOdometry();
+
+            s0 = spline.nextClosestPt(bot.getPose().x, bot.getPose().y, s0, this);
+            float currentPathLength = spline.getPathLength(s0);
+            float remainingPathLength = totalPathLength - currentPathLength;
+
+            if (remainingPathLength < adjDist ||  (s0 >= 1 && spline.getIndex() == (spline.getNumSegments() - 1))) break;
+
+            VectorF targetPos = spline.p(s0);
+            VectorF posOffset = targetPos.subtracted(new VectorF(bot.getPose().x, bot.getPose().y));
+            VectorF d1 = spline.d1(s0);
+            VectorF d2 = spline.d2(s0);
+
+            float speed = (float)Math.min(Math.sqrt(vMinSquared + 2.0*motionProfile.accel*currentPathLength),
+                    Math.sqrt(vMinSquared + 2.0*motionProfile.accel*(remainingPathLength)));
+            speed = Math.min(speed, motionProfile.vMax);
+            VectorF fwdVel = d1.multiplied(speed / d1.magnitude());
+            VectorF corrVel = posOffset.multiplied(2 * DISTANCE_CORRECTION_FACTOR);
+            VectorF totalV = fwdVel.added(corrVel);
+            VectorF totalVBot = fieldToBot(totalV, bot.getPose().theta);
+
+            float nominalAngularSpeed;
+            float targetHeadingRadians;
+            if (currentPathLength < preTurnPathLength) {
+                nominalAngularSpeed = 0;
+                targetHeadingRadians = initHeadingRadians;
+            } else if (currentPathLength < (preTurnPathLength + turnPathLength)){
+                nominalAngularSpeed = radiansPerInch * speed;
+                targetHeadingRadians = (float)AngleUtils.normalizeRadians(((currentPathLength - preTurnPathLength) / turnPathLength) * turnRadians + initHeadingRadians);
+            } else {
+                nominalAngularSpeed = 0;
+                targetHeadingRadians = finalHeadingRadians;
+            }
+            float headingOffset = (float)AngleUtils.normalizeRadians(targetHeadingRadians - bot.getPose().theta);
+            float va = nominalAngularSpeed + headingOffset * HEADING_CORRECTION_FACTOR;
+
+            bot.setDriveSpeed(totalVBot.get(0), totalVBot.get(1), va);
+        }
+
+        //Adjust position at the end
+        while (opModeIsActive()){
+            bot.updateOdometry();
+            float xOffset = finalX - bot.getPose().x;
+            float yOffset = finalY - bot.getPose().y;
+            float dOffset = (float)Math.hypot(xOffset, yOffset);
+
+            if (dOffset < tol) break;
+
+            float speed = (float)Math.min(vMinSquared + 2.0*motionProfile.accel*dOffset, motionProfile.vMax);
+            VectorF velocity = new VectorF(speed * xOffset/dOffset, speed * yOffset/dOffset);
+            VectorF totalVBot = fieldToBot(velocity, bot.getPose().theta);
+            float headingOffset = (float)AngleUtils.normalizeRadians(finalHeadingRadians - bot.getPose().theta);
+            float va = headingOffset * HEADING_CORRECTION_FACTOR;
+            bot.setDriveSpeed(totalVBot.get(0), totalVBot.get(1), va);
+        }
+
+        bot.setDriveSpeed(0, 0, 0);
+    }
+
     protected void driveFunction(float speed, float s0, ParametricFunction2D pf, Predicate finish) {
         while (opModeIsActive()) {
             bot.updateOdometry();

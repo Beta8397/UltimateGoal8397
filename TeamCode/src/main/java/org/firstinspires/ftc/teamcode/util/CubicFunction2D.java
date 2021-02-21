@@ -71,10 +71,11 @@ public class CubicFunction2D implements ParametricFunction2D {
     protected float findClosestPt(float x0, float y0, float s0, LinearOpMode opMode) {
         float epsilon = .0001f;
         float delta = 100;
-        int maxIter = 10;
+        int maxIter = 50;
         int numIter = 0;
-        while(delta > epsilon && numIter<maxIter && opMode.opModeIsActive()) {
+        while(delta > epsilon && numIter<maxIter) {
             numIter++;
+            if (numIter%10 == 0 && !opMode.opModeIsActive()) break;
             VectorF p = p(s0);
             VectorF d1 = d1(s0);
             VectorF d2 = d2(s0);
