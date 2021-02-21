@@ -182,6 +182,8 @@ public class CubicSpline2D {
 
     }
 
+    public VectorF[] getPoints() { return points; }
+
     /**
      * Set the current segment index
      * @param i
