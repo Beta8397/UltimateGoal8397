@@ -19,13 +19,9 @@ public class GoalBot extends MecBot {
     public static final float SHOOTER_POWER_HIGH = 0.9f;
     public static final float KICKER_ENGAGED = 0.14f;
     public static final float KICKER_HALF_ENGAGED = 0.18f;
-    public static final float KICKER_UNENGAGED = 0.34f;
+    public static final float KICKER_UNENGAGED = 0.35f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
-    public static final float LEFT_X= 1000;
-    public static final float RIGHT_X = 1000;
-    public static final float X_TICKS_PER_RADIAN = 0;
-    public static final float TICKS_PER_INCH = 500;
 
     DcMotorEx intakeFront;
     DcMotorEx intakeBack;
@@ -34,8 +30,6 @@ public class GoalBot extends MecBot {
     Servo kicker;
     Servo grabber;
     Servo ringKicker;
-    DcMotorEx rightEncoder, leftEncoder, sideEncoder;
-    public int rightTicks, leftTicks, sideTicks;
     public enum IntakeState {
         OFF, FWD, REV
     }
@@ -61,50 +55,10 @@ public class GoalBot extends MecBot {
         shooter.setDirection(DcMotorSimple.Direction.REVERSE );
         kicker = hwMap.get(Servo.class, "kicker");
         ringKicker = hwMap.get(Servo.class, "ring kicker");
-//        leftEncoder = hwMap.get(DcMotorEx.class, "leftEncoder");
-//        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-//        rightEncoder = hwMap.get(DcMotorEx.class, "rightEncoder");
-//        sideEncoder = hwMap.get(DcMotorEx.class, "sideEncoder");
         return result;
     }
 
-    public Pose updateFreeWheel(){
-        int rightCurrentTicks = rightEncoder.getCurrentPosition();
-        int leftCurrentTicks = leftEncoder.getCurrentPosition();
-        int sideCurrentTicks = sideEncoder.getCurrentPosition();
-        int rightNewTicks = rightCurrentTicks - rightTicks;
-        int leftNewTicks = leftCurrentTicks - leftTicks;
-        int sideNewTicks = sideCurrentTicks - sideTicks;
-        rightTicks = rightCurrentTicks;
-        leftTicks = leftCurrentTicks;
-        sideTicks = sideCurrentTicks;
-        float dyR = (LEFT_X * rightNewTicks + RIGHT_X * leftNewTicks) / ((LEFT_X + RIGHT_X) * TICKS_PER_INCH);
-        float dT = (rightNewTicks - leftNewTicks) / (LEFT_X + RIGHT_X);
-        float sideEncoderAngleTicks = X_TICKS_PER_RADIAN * dT;
-        float dxR = (sideNewTicks - sideEncoderAngleTicks) / TICKS_PER_INCH;
-        float avgHeading = (float)AngleUtils.normalizeRadians(pose.theta + 0.5 * dT);
 
-        float dX = dxR * (float)Math.sin(avgHeading) + dyR * (float)Math.cos(avgHeading);
-        float dY = -dxR * (float)Math.cos(avgHeading) + dyR * (float)Math.sin(avgHeading);
-
-        /*
-         * Update the Pose object with the new values for X, Y, and Heading
-         */
-        float heading = (float) AngleUtils.normalizeRadians(pose.theta + dT);
-        pose = new Pose(pose.x + dX, pose.y + dY, heading);
-
-        /*
-         * Return the updated Pose object
-                */
-        return pose;
-
-    }
-    /*public void updateTicks(){
-        leftTicks = leftEncoder.getCurrentPosition();
-        rightTicks = rightEncoder.getCurrentPosition();
-        sideTicks = sideEncoder.getCurrentPosition();
-
-    }*/
 
     public void setArmMode(DcMotor.RunMode Mode){
         if (Mode == DcMotor.RunMode.RUN_TO_POSITION) {

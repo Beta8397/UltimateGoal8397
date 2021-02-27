@@ -64,8 +64,9 @@ public class RedAutonomous3 extends GoalBotAutonomous {
 
         bot.setKickerEngaged();
         sleep(500);
+        bot.setShooterPower(0.68f);
         bot.setKickerUnengaged();
-        bot.setShooterPower(0.7f);
+        //bot.setShooterPower(0.7f);
         sleep(500);
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
@@ -123,13 +124,13 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         bot.setArmPosition(610);
         //drive to pick up second wobble.
         if (rings == Rings.ZERO) {
-            driveToPosition(36, 6, 34, 35, 180, 2, 1);
+            driveToPosition(36, 6, 34, 36, 180, 2, 1);
             turnToHeading(-170, 3,8,60);
         } else if (rings == Rings.ONE){
 //            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
 //            driveToPosition(36, 6, 36, 32, 180, 2, 1);
             driveToPosition(new MotionProfile(8, 48, 25), bot.getPose().x - 24, 36, 180, 6 );
-            driveToPosition(new MotionProfile(8, 48, 25), 36, 36, 180, 1);
+            driveToPosition(new MotionProfile(8, 48, 25), 36, 35, 180, 1);
             turnToHeading(-170, 3,8,60);
         } else {
             bot.setIntake(GoalBot.IntakeState.REV);
@@ -169,7 +170,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         }
         //driveToPosition(36, 6, x, y, -90, 2, 1);
         bot.setArmPosition(470);
-        sleep(300);
+        sleep(400);
         bot.setGrabberOpen();
         sleep(300);
         bot.setArmPosition(0);
