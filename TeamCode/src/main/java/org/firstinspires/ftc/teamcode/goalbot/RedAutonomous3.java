@@ -64,24 +64,29 @@ public class RedAutonomous3 extends GoalBotAutonomous {
 
         bot.setKickerEngaged();
         sleep(500);
-        bot.setShooterPower(0.68f);
+        bot.setShooterPower(0.7f);
         bot.setKickerUnengaged();
-        //bot.setShooterPower(0.7f);
         sleep(500);
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
+
         bot.setKickerEngaged();
-        bot.setRingKickerEngaged();
+        //bot.setRingKickerEngaged();
         sleep(500);
         bot.setKickerUnengaged();
         //bot.setRingKickerEngaged();
         sleep(500);
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
+        bot.setIntake(GoalBot.IntakeState.FWD);
+        //sleep(500);
         bot.setKickerEngaged();
         sleep(500);
+
+        bot.setIntake(GoalBot.IntakeState.OFF);
+
         bot.setKickerUnengaged();
-        bot.setRingKickerUnengaged();
+        //bot.setRingKickerUnengaged();
 
         bot.setIntake(GoalBot.IntakeState.FWD);
 
@@ -130,7 +135,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
 //            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
 //            driveToPosition(36, 6, 36, 32, 180, 2, 1);
             driveToPosition(new MotionProfile(8, 48, 25), bot.getPose().x - 24, 36, 180, 6 );
-            driveToPosition(new MotionProfile(8, 48, 25), 36, 35, 180, 1);
+            driveToPosition(new MotionProfile(8, 48, 25), 35, 35, 180, 1);
             turnToHeading(-170, 3,8,60);
         } else {
             bot.setIntake(GoalBot.IntakeState.REV);

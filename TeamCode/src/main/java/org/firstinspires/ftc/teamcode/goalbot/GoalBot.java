@@ -17,9 +17,9 @@ public class GoalBot extends MecBot {
     public static final float GRABBER_CLOSED_POSITION = 0.8f;
     public static final float SHOOTER_POWER_NORMAL = 0.72f;
     public static final float SHOOTER_POWER_HIGH = 0.9f;
-    public static final float KICKER_ENGAGED = 0.14f;
+    public static final float KICKER_ENGAGED = 0.15f;
     public static final float KICKER_HALF_ENGAGED = 0.18f;
-    public static final float KICKER_UNENGAGED = 0.35f;
+    public static final float KICKER_UNENGAGED = 0.36f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
 
@@ -43,11 +43,16 @@ public class GoalBot extends MecBot {
     public boolean init(HardwareMap hwMap){
         boolean result = super.init(hwMap);
         intakeFront = hwMap.get(DcMotorEx.class, "intake front");
+        intakeFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeBack = hwMap.get(DcMotorEx.class, "intake back");
+        intakeBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeFront.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeBack.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor = hwMap.get(DcMotorEx.class, "arm_motor");
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         grabber = hwMap.get(Servo.class, "grabber");
         shooter = hwMap.get(DcMotorEx.class, "shooter");

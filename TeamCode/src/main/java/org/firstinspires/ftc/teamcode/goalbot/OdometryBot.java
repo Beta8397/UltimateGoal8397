@@ -12,7 +12,7 @@ public class OdometryBot extends GoalBot{
     Encoder leftEncoder = null;
     Encoder horizEncoder = null;
     public static final float TICKS_PER_INCH = 1875.4f;
-    public static final float HORIZ_TICKS_PER_RAD = -4007.8f;
+    public static final float HORIZ_TICKS_PER_RAD = 4007.8f;
     public static final float ROTATION_COEFF = 26695f;
     public static final float FRAC_LEFT = 0.507f;
     public static final float FRAC_RIGHT = 0.493f;
