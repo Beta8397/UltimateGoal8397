@@ -39,7 +39,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
         bot.setArmPosition(50);
         testGyroAndWaitForStart();
-        bot.setShooterPower(0.72f);
+        bot.setShooterPower(0.73f);
         rings = getRings(true);
         driveToPosition(18, 4, X_SHOOT, Y_SHOOT, 180, 2, 1);
         turnToHeading(shootingAngle, 1, 6, 45);
@@ -100,10 +100,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         float x;
         if(rings == Rings.ZERO){
             x = 74;
-            y = 27;
+            y = 26;
         } else if(rings == Rings.ONE){
-            x = 94;
-            y = 52;
+            x = 93;
+            y = 49;
         } else{
             x = 123;
             y = 27;
@@ -126,10 +126,10 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         if (rings != Rings.FOUR) {
             turnToHeading(180, 5, 8, 60);
         }
-        bot.setArmPosition(610);
+        bot.setArmPosition(590);
         //drive to pick up second wobble.
         if (rings == Rings.ZERO) {
-            driveToPosition(36, 6, 34, 36, 180, 2, 1);
+            driveToPosition(36, 6, 35, 33.5f, 180, 2, 1);
             turnToHeading(-170, 3,8,60);
         } else if (rings == Rings.ONE){
 //            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
@@ -159,13 +159,13 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         }
         if (rings == Rings.ONE) {
             x = x - 9;
-            y = y + 9;
+            y = y + 7;
         } else if (rings == Rings.ZERO) {
             x = x - 7;
-            y = y + 9;
+            y = y + 7;
         } else {
             x = x - 7;
-            y = y + 7;
+            y = y + 5;
         }
 
         if(rings == Rings.ONE) {
