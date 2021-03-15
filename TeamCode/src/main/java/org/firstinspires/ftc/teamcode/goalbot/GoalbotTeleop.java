@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.logging.BetaLog;
 import org.firstinspires.ftc.teamcode.mecbot.MecBotTeleOp;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.Updatable;
@@ -207,13 +208,11 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
 
             if (shooting) {
-                if (shootingTimer.seconds() < .5 * SHOOTER_DELAYED) {
-                    bot.setKickerEngaged();
-                } else if (shootingTimer.seconds() < SHOOTER_DELAYED) {
-                    bot.setKickerUnengaged();
-                } else {
-                    shootingTimer.reset();
-                }
+                bot.setKickerEngaged();
+                sleep(500);
+                bot.setShooterPower(0.69f);
+                bot.setKickerUnengaged();
+                sleep(500);
             } else {
                 bot.setKickerUnengaged();
             }
@@ -334,6 +333,17 @@ public class GoalbotTeleop extends MecBotTeleOp {
             bot.setDriveSpeed(vx, vy, va);
         }
     }
+    private class AutoShoot implements Updatable {
+
+        public void update() {
+            bot.setKickerEngaged();
+            sleep(500);
+            bot.setShooterPower(0.7f);
+            bot.setKickerUnengaged();
+            sleep(500);
+        }
+    }
+
 
     private void handleIntake() {
 

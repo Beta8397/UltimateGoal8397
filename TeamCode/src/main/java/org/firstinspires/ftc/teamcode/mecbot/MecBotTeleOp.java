@@ -29,8 +29,12 @@ public abstract class MecBotTeleOp extends LinearOpMode {
 
     MecBot bot = null;
 
-    private boolean slowMode = true;
-    private boolean quadMode = true;
+    public enum SpeedMode {
+        SLOW, FAST, PANIC
+    }
+
+    private SpeedMode speedMode = SpeedMode.FAST;
+    private boolean quadMode = false;
     private boolean telemetryEnabled = true;
     private boolean fieldCentric = false;
     private float px, py, pa;
@@ -52,6 +56,11 @@ public abstract class MecBotTeleOp extends LinearOpMode {
             return gamepad1.dpad_left;
         }
     };
+    private ButtonToggle toggleR1bump = new ButtonToggle(ButtonToggle.Mode.RELEASED) {
+        protected boolean getButtonState() {
+            return gamepad1.right_bumper;
+        }
+    };
 //    private ButtonToggle toggleY = new ButtonToggle(ButtonToggle.Mode.RELEASED) {
 //        protected boolean getButtonState() {
 //            return gamepad1.y;
@@ -59,7 +68,7 @@ public abstract class MecBotTeleOp extends LinearOpMode {
 //    };
 
     protected static final float SLOW_MODE_SCALER = 5.0f;
-    protected static final float FAST_MODE_SCALER =1.5f;
+    protected static final float FAST_MODE_SCALER = 1.25f;
     protected static final float JOYSTICK_DEADZONE = 0.05f;
     protected static final float TRIGGER_DEADZONE = 0.05f;
 
@@ -76,29 +85,33 @@ public abstract class MecBotTeleOp extends LinearOpMode {
     protected void doDriveControl(){
 
         if (toggleD1up.update()) {
-            slowMode = !slowMode;
+             speedMode = speedMode == SpeedMode.SLOW? SpeedMode.FAST: SpeedMode.SLOW;
 
         }
-        if (toggleD1down.update()) quadMode = !quadMode;
-        if (toggleD1left.update()) telemetryEnabled = !telemetryEnabled;
+        if (toggleD1left.update()) {
+            speedMode = speedMode == SpeedMode.PANIC? SpeedMode.FAST: SpeedMode.PANIC;
+        }
+        if (toggleD1down.update()) {
+            quadMode = !quadMode;
+        }
         // We won't be using field centric for now, so we can use gamepad1.y
         // if (toggleY.update()) fieldCentric = !fieldCentric;
 
         px = gamepad1.left_stick_x;
         py = -gamepad1.left_stick_y;
 
-        if(fieldCentric) {
-            float pxf = py;
-            float pyf = -px;
-
-            float theta = bot.getHeadingRadians();
-            telemetry.addData("Heading", theta * 180 / Math.PI);
-            float sinTheta = (float) Math.sin(theta);
-            float cosTheta = (float) Math.cos(theta);
-
-            px = pxf * sinTheta - pyf * cosTheta;
-            py = pxf * cosTheta + pyf * sinTheta;
-        }
+//        if(fieldCentric) {
+//            float pxf = py;
+//            float pyf = -px;
+//
+//            float theta = bot.getHeadingRadians();
+//            telemetry.addData("Heading", theta * 180 / Math.PI);
+//            float sinTheta = (float) Math.sin(theta);
+//            float cosTheta = (float) Math.cos(theta);
+//
+//            px = pxf * sinTheta - pyf * cosTheta;
+//            py = pxf * cosTheta + pyf * sinTheta;
+//        }
 
         float leftTrigger = gamepad1.left_trigger;
         if (leftTrigger < TRIGGER_DEADZONE) leftTrigger = 0;
@@ -119,11 +132,11 @@ public abstract class MecBotTeleOp extends LinearOpMode {
             py = Math.signum(py) * py * py;
             pa = Math.signum(pa) * pa * pa;
         }
-        if (slowMode) {
+        if (speedMode == SpeedMode.SLOW) {
             px /= SLOW_MODE_SCALER;
             py /= SLOW_MODE_SCALER;
             pa /= SLOW_MODE_SCALER;
-        } else {
+        } else if (speedMode == SpeedMode.FAST) {
             px /= FAST_MODE_SCALER;
             py /= FAST_MODE_SCALER;
             pa /= FAST_MODE_SCALER;
@@ -142,7 +155,7 @@ public abstract class MecBotTeleOp extends LinearOpMode {
     }
 
     private void doTelemetry(){
-        telemetry.addData("SLOW: ",slowMode);
+        telemetry.addData("Mode: ",speedMode);
         telemetry.addData("QUAD: ", quadMode);
         telemetry.addData("Drive Power: ","px %.2f  py %.2f  pa %.2f",
                 px, py, pa);
