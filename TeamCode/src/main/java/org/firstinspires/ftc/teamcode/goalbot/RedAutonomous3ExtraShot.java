@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraDevice;
 
-import org.apache.commons.math3.special.Beta;
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
 import org.firstinspires.ftc.teamcode.logging.BetaLog;
 import org.firstinspires.ftc.teamcode.util.MotionProfile;
 
-@Autonomous(name = "red auto3", group = "red")
-public class RedAutonomous3 extends GoalBotAutonomous {
+@Autonomous(name = "red auto3 extra shot", group = "red")
+public class RedAutonomous3ExtraShot extends GoalBotAutonomous {
 
     public static final float X0 = 9;
     public static final float Y0 = 37;
@@ -86,6 +84,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         bot.setIntake(GoalBot.IntakeState.OFF);
 
         bot.setKickerUnengaged();
+        bot.setShooterPower(0.73f);
         //bot.setRingKickerUnengaged();
 
         bot.setIntake(GoalBot.IntakeState.FWD);
@@ -95,6 +94,8 @@ public class RedAutonomous3 extends GoalBotAutonomous {
             driveToPosition(36,6, bot.getPose().x,53,-90,2,1);
         } else {
             driveToPosition(36,6, bot.getPose().x + 7,24,-90,2,1);
+
+
         }
         float y;
         float x;
@@ -147,7 +148,7 @@ public class RedAutonomous3 extends GoalBotAutonomous {
         sleep(500);
         bot.setArmPosition(300);
         //Turn robot, then drive to drop off second wobble.
-        if (rings != Rings.FOUR) {
+        if (rings == Rings.ZERO) {
             turnToHeading(-90, 6,8, 60);
 //            turnToHeading(-90, 6, 8, 60,
 //                    new Action() {
@@ -156,6 +157,17 @@ public class RedAutonomous3 extends GoalBotAutonomous {
 //                            float pos = bot.getArmActualPos();
 //                        }
 //                    });
+        } else if(rings == Rings.ONE){
+            driveToPosition(new MotionProfile(8, 48,25), X_SHOOT, Y_SHOOT, shootingAngle, 1f);
+            turnToHeading(shootingAngle, 2f, 8, 60);
+
+            bot.setKickerEngaged();
+            sleep(500);
+            bot.setShooterPower(0.7f);
+            bot.setKickerUnengaged();
+            BetaLog.d("shooter speed", bot.shooter.getVelocity());
+
+            turnToHeading(-90, 5f, 8, 60);
         }
         if (rings == Rings.ONE) {
             x = x - 9;

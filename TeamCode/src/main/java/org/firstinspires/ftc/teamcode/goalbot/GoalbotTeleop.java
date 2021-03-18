@@ -200,19 +200,25 @@ public class GoalbotTeleop extends MecBotTeleOp {
             float shooterRPM = (float)bot.shooter.getVelocity(AngleUnit.DEGREES) / 6;
             telemetry.addData("shooter_RPM", shooterRPM);
 
-            if (toggleB2.update()) {
-                shooting = true;
-                shootingTimer.reset();
-            } else if(!gamepad2.b) {
-                shooting = false;
-            }
+//            if (toggleB2.update()) {
+//                shooting = true;
+//                shootingTimer.reset();
+//            } else if(!gamepad2.b) {
+//                shooting = false;
+//            }
+//
+//            if (shooting) {
+//                bot.setKickerEngaged();
+//                sleep(500);
+//                bot.setShooterPower(0.69f);
+//                bot.setKickerUnengaged();
+//                sleep(500);
+//            } else {
+//                bot.setKickerUnengaged();
+//            }
 
-            if (shooting) {
+            if (gamepad2.b) {
                 bot.setKickerEngaged();
-                sleep(500);
-                bot.setShooterPower(0.69f);
-                bot.setKickerUnengaged();
-                sleep(500);
             } else {
                 bot.setKickerUnengaged();
             }
@@ -225,7 +231,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
             if (toggleB1.update() && autoDrive == null) {
                 autoDrive = new AutoDrive(36, 34, -162, 18, 4, 2, 6, 1, 1);
             } else if (toggleY1.update() && autoDrive == null) {
-                autoDrive = new AutoDrive(67.5f, 59f, -156, 18, 4, 2, 6, 1, 1);
+                autoDrive = new AutoDrive(67.5f, 59f, -158, 25, 10, 2, 6, 1, 1);
             } else if (toggleDpadRight1.update() && autoDrive == null ) {
                 autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5)));
             }
