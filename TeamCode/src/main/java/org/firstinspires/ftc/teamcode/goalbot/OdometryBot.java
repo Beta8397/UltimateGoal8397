@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -7,15 +8,17 @@ import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.Pose;
 import org.firstinspires.ftc.teamcode.util.odometry.Encoder;
 
+import java.util.List;
+
 public class OdometryBot extends GoalBot{
     Encoder rightEncoder = null;
     Encoder leftEncoder = null;
     Encoder horizEncoder = null;
-    public static final float TICKS_PER_INCH = 1875.4f;
-    public static final float HORIZ_TICKS_PER_RAD = 4007.8f;
-    public static final float ROTATION_COEFF = 26695f;
-    public static final float FRAC_LEFT = 0.507f;
-    public static final float FRAC_RIGHT = 0.493f;
+    public static final float TICKS_PER_INCH = 1865f; //was 1875.4
+    public static final float HORIZ_TICKS_PER_RAD = 4056f; //was 4008
+    public static final float ROTATION_COEFF = 26767f; // was 26695
+    public static final float FRAC_LEFT = 0.503f; // was 0.507
+    public static final float FRAC_RIGHT = 0.497f; // was 0.493
     public int rightTicks, leftTicks, horizTicks;
 
     public OdometryBot() {
@@ -24,6 +27,12 @@ public class OdometryBot extends GoalBot{
 
     @Override
     public boolean init(HardwareMap hwMap) {
+
+                    List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+
+            for (LynxModule module : allHubs) {
+                module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+           }
         boolean result = super.init(hwMap);
         rightEncoder = new Encoder(intakeBack, true);
         leftEncoder = new Encoder(armMotor, true);

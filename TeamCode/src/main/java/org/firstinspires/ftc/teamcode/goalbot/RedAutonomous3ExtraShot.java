@@ -73,10 +73,10 @@ public class RedAutonomous3ExtraShot extends GoalBotAutonomous {
         sleep(500);
         bot.setKickerUnengaged();
         //bot.setRingKickerEngaged();
+        bot.setIntake(GoalBot.IntakeState.FWD);
         sleep(500);
         BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
-        bot.setIntake(GoalBot.IntakeState.FWD);
         //sleep(500);
         bot.setKickerEngaged();
         sleep(500);

@@ -25,9 +25,9 @@ public class TestOdom extends LinearOpMode {
             telemetry.addData("ticks", "L %d R %d H %d", bot.leftTicks, bot.rightTicks, bot.horizTicks);
             telemetry.addData("pose", "x %.1f y %.1f t %.1f", bot.getPose().x, bot.getPose().y, Math.toDegrees(bot.getPose().theta));
 
-            float px = gamepad1.left_stick_x;
-            float py = -gamepad1.left_stick_y;
-            float pa = gamepad1.left_trigger - gamepad1.right_trigger;
+            float px = gamepad1.left_stick_x * 0.5f;
+            float py = -gamepad1.left_stick_y * 0.5f;
+            float pa = (gamepad1.left_trigger - gamepad1.right_trigger) * 0.5f;
             telemetry.update();
 
             bot.setDrivePower(px, py, pa);

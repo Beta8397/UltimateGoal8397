@@ -125,11 +125,7 @@ public class MecBot {
      */
     public boolean init(HardwareMap hwMap) {
 
-//            List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
-//
-//            for (LynxModule module : allHubs) {
-//                module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-//            }
+
 
         frontLeft = hwMap.get(DcMotorEx.class, "front_left_motor");
         frontRight = hwMap.get(DcMotorEx.class, "front_right_motor");
