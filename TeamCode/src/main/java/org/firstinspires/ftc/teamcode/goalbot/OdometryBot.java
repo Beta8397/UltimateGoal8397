@@ -1,11 +1,21 @@
 package org.firstinspires.ftc.teamcode.goalbot;
 
+import android.graphics.drawable.GradientDrawable;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
+import org.firstinspires.ftc.teamcode.i2c.BNO055Enhanced;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.Pose;
+import org.firstinspires.ftc.teamcode.util.Updatable;
 import org.firstinspires.ftc.teamcode.util.odometry.Encoder;
 
 import java.util.List;
@@ -21,6 +31,8 @@ public class OdometryBot extends GoalBot{
     public static final float FRAC_RIGHT = 0.497f; // was 0.493
     public int rightTicks, leftTicks, horizTicks;
 
+    BNO055Enhanced armIMU = null;
+
     public OdometryBot() {
         super();
     }
@@ -28,16 +40,31 @@ public class OdometryBot extends GoalBot{
     @Override
     public boolean init(HardwareMap hwMap) {
 
-                    List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+        List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
 
-            for (LynxModule module : allHubs) {
-                module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-           }
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
         boolean result = super.init(hwMap);
         rightEncoder = new Encoder(intakeBack, true);
         leftEncoder = new Encoder(armMotor, true);
         horizEncoder = new Encoder(intakeFront, true);
-        return result;
+
+        armIMU = hwMap.get(BNO055Enhanced.class, "arm_imu");
+        imu = hwMap.get(BNO055Enhanced.class, "imu");
+
+        BNO055Enhanced.Parameters parameters = new BNO055Enhanced.Parameters();
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.calibrationDataFile = "BN055Cali.json";
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "IMU";
+        parameters.axesMap = BNO055Enhanced.AxesMap.XYZ;
+        parameters.axesSign = BNO055Enhanced.AxesSign.PPN;
+
+        boolean armSuccess = armIMU.initialize(parameters);
+
+        return armSuccess;
     }
 
     @Override
@@ -78,6 +105,44 @@ public class OdometryBot extends GoalBot{
         leftTicks = leftEncoder.getCurrentPosition();
         rightTicks = rightEncoder.getCurrentPosition();
         horizTicks = horizEncoder.getCurrentPosition();
+
+    }
+
+    public Orientation getArmOrientation(){
+        return armIMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    }
+
+    public Quaternion getArmQuaternion(){
+        return armIMU.getQuaternionOrientation();
+    }
+
+    public float getArmPosition(){
+        Quaternion q = armIMU.getQuaternionOrientation();
+        float mag = q.magnitude();
+
+        float zDOT = 1 - 2 * mag * (q.y * q.y + q.x * q.x);
+        float xDOT = 2 * mag * (q.x * q.z - q.y * q.w);
+
+        float result = (float)Math.acos(zDOT);
+        result = (float)Math.toDegrees(result);
+        if(xDOT > 0) result = - result;
+        return result;
+    }
+
+    public class ArmControl implements Updatable{
+        private float target;
+
+        public ArmControl(float target){
+            this.target = target;
+        }
+
+        public void setTarget(float target){
+            this.target = target;
+        }
+
+        public void update(){
+
+        }
 
     }
 
