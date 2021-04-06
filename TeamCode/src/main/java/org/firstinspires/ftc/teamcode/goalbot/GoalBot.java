@@ -72,8 +72,8 @@ public class GoalBot extends MecBot {
         armMotor.setMode(Mode);
     }
 
-    public void setArmPosition(int ticks){
-        armMotor.setTargetPosition(ticks);
+    public void setArmPosition(float ticks){
+        armMotor.setTargetPosition((int)ticks);
         if (armMotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }

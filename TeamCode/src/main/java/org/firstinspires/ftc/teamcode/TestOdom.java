@@ -21,6 +21,8 @@ public class TestOdom extends LinearOpMode {
 
         bot.setPose(0,0,90);
 
+        float armTarget = 0;
+
         while (opModeIsActive()){
 
             bot.updateOdometry();
@@ -31,22 +33,36 @@ public class TestOdom extends LinearOpMode {
             telemetry.addData("arm", "1: %.1f  2: %.1f  3: %.1f", armOrientation.firstAngle,
                     armOrientation.secondAngle, armOrientation.thirdAngle);
 
-            Quaternion q = bot.getArmQuaternion();
-            telemetry.addData("quat", "w: %.2f x: %.2f y: %.2f z: %.2f", q.w, q.x, q.y, q.z);
-            float mag = q.magnitude();
-            telemetry.addData("qautMAG", mag);
 
-            float zDOT = 1 - 2 * mag * (q.y * q.y + q.x * q.x);
-            float xDOT = 2 * mag * (q.x * q.z - q.y * q.w);
-            telemetry.addData("armAxes", "zDOT %.3f  xDOT %.3f", zDOT, xDOT);
 
             float armPose = bot.getArmPosition();
             telemetry.addData("armPose", armPose);
+
+            if(gamepad1.a){
+                bot.armControl.update();
+                telemetry.addData("arm updated", "");
+            } else if(gamepad1.dpad_up){
+                bot.armMotor.setPower(0.2);
+            }
+            else {
+                bot.armMotor.setPower(0);
+                telemetry.addData("arm zero", "");
+            }
+            if(gamepad1.x){
+                armTarget = (float)Math.max(armTarget-0.25, 0);
+            } else if(gamepad1.b){
+                armTarget = (float)Math.min(armTarget+0.25,200);
+            }
+            bot.setArmPosition(armTarget);
+
+            telemetry.addData("arm target",armTarget);
+            telemetry.addData("arm power",bot.armMotor.getPower());
 
             float px = gamepad1.left_stick_x * 0.5f;
             float py = -gamepad1.left_stick_y * 0.5f;
             float pa = (gamepad1.left_trigger - gamepad1.right_trigger) * 0.5f;
             telemetry.update();
+
 
             bot.setDrivePower(px, py, pa);
 

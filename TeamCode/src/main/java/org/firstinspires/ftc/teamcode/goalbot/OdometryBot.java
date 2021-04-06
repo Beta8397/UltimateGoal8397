@@ -32,6 +32,7 @@ public class OdometryBot extends GoalBot{
     public int rightTicks, leftTicks, horizTicks;
 
     BNO055Enhanced armIMU = null;
+    public ArmControl armControl = null;
 
     public OdometryBot() {
         super();
@@ -63,6 +64,8 @@ public class OdometryBot extends GoalBot{
         parameters.axesSign = BNO055Enhanced.AxesSign.PPN;
 
         boolean armSuccess = armIMU.initialize(parameters);
+
+        armControl = new ArmControl(0);
 
         return armSuccess;
     }
@@ -120,20 +123,31 @@ public class OdometryBot extends GoalBot{
         Quaternion q = armIMU.getQuaternionOrientation();
         float mag = q.magnitude();
 
-        float zDOT = 1 - 2 * mag * (q.y * q.y + q.x * q.x);
-        float xDOT = 2 * mag * (q.x * q.z - q.y * q.w);
+        float zDOT = 1 - 2  * (q.y * q.y + q.x * q.x);
+        float xDOT = 2  * (q.x * q.z - q.y * q.w);
 
-        float result = (float)Math.acos(zDOT);
+        float result = (float)Math.atan2(-xDOT, zDOT);
         result = (float)Math.toDegrees(result);
-        if(xDOT > 0) result = - result;
+        if(result < -60) result += 360;
         return result;
+    }
+
+    @Override
+    public void setArmPosition (float target){
+        armControl.setTarget(target);
     }
 
     public class ArmControl implements Updatable{
         private float target;
+        private float coef = 0.3f;
 
         public ArmControl(float target){
             this.target = target;
+        }
+
+        public ArmControl(float target, float coef){
+            this(target);
+            this.coef = coef;
         }
 
         public void setTarget(float target){
@@ -141,6 +155,15 @@ public class OdometryBot extends GoalBot{
         }
 
         public void update(){
+            float armPosition = getArmPosition();
+
+            float error = target - armPosition;
+            float power = error * coef;
+            if(Math.abs(power)>0.3) power = 0.3f * (float) Math.signum(power);
+            if(target<1 && target>-60 && armPosition<10 && armPosition>-60) power = 0;
+
+            armMotor.setPower (power);
+
 
         }
 
