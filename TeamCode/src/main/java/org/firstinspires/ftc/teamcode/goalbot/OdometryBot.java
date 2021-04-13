@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.teamcode.i2c.BNO055Enhanced;
+import org.firstinspires.ftc.teamcode.logging.BetaLog;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
 import org.firstinspires.ftc.teamcode.util.Pose;
 import org.firstinspires.ftc.teamcode.util.Updatable;
@@ -122,9 +123,10 @@ public class OdometryBot extends GoalBot{
     public float getArmPosition(){
         Quaternion q = armIMU.getQuaternionOrientation();
         float mag = q.magnitude();
+        float magSquare = mag * mag;
 
-        float zDOT = 1 - 2  * (q.y * q.y + q.x * q.x);
-        float xDOT = 2  * (q.x * q.z - q.y * q.w);
+        float zDOT = 1 - 2  * (q.y * q.y + q.x * q.x)/magSquare;
+        float xDOT = 2  * (q.x * q.z - q.y * q.w)/magSquare;
 
         float result = (float)Math.atan2(-xDOT, zDOT);
         result = (float)Math.toDegrees(result);
@@ -139,7 +141,7 @@ public class OdometryBot extends GoalBot{
 
     public class ArmControl implements Updatable{
         private float target;
-        private float coef = 0.3f;
+        private float coef = 0.02f;
 
         public ArmControl(float target){
             this.target = target;
@@ -159,10 +161,11 @@ public class OdometryBot extends GoalBot{
 
             float error = target - armPosition;
             float power = error * coef;
-            if(Math.abs(power)>0.3) power = 0.3f * (float) Math.signum(power);
+            if(Math.abs(power)>0.4) power = 0.4f * (float) Math.signum(power);
             if(target<1 && target>-60 && armPosition<10 && armPosition>-60) power = 0;
-
-            armMotor.setPower (power);
+            BetaLog.dd("armcontrol", "pos = %.1f   targpos = %.1f   error = %.1f   power = %.3f",
+                    armPosition, target, error, power);
+            armMotor.setPower(power);
 
 
         }

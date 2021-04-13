@@ -6,15 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.teamcode.goalbot.OdometryBot;
+import org.firstinspires.ftc.teamcode.logging.BetaLog;
+import org.firstinspires.ftc.teamcode.logging.LoggingLinearOpMode;
 
 @TeleOp (name ="Test Odom", group = "test")
 
-public class TestOdom extends LinearOpMode {
+public class TestOdom extends LoggingLinearOpMode {
 
     OdometryBot bot = new OdometryBot();
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runLoggingOpMode() throws InterruptedException {
         bot.init(hardwareMap);
         gamepad1.setJoystickDeadzone(0.05f);
         waitForStart();
@@ -42,7 +44,12 @@ public class TestOdom extends LinearOpMode {
                 bot.armControl.update();
                 telemetry.addData("arm updated", "");
             } else if(gamepad1.dpad_up){
-                bot.armMotor.setPower(0.2);
+                bot.armMotor.setPower(0.4);
+                BetaLog.dd("dpad_up", "arm pos = %.1f", armPose);
+            } else if(gamepad1.dpad_down) {
+                bot.armMotor.setPower(-0.4);
+                BetaLog.dd("dpad_down", "arm pos = %.1f", armPose);
+
             }
             else {
                 bot.armMotor.setPower(0);
