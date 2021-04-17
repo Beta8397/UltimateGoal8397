@@ -103,6 +103,12 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad1.dpad_right;
         }
     };
+    ButtonToggle toggleRBJS2 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+        @Override
+        protected boolean getButtonState() {
+            return gamepad2.right_stick_button;
+        }
+    };
 
 
     private boolean grabberClosed = true;
@@ -161,14 +167,30 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
             if(armStateChange) {
 
+                armStateChange = false;
                 int armTarget = armPos == ArmPos.OUT ? 590 :
                         armPos == ArmPos.UP ? 300 : 80;
                 bot.setArmPosition(armTarget);
             }
-            if(armPos == ArmPos.IN && bot.getArmActualPos() < 100){
+            if(armPos == ArmPos.IN && bot.getArmActualPos() < 100 && bot.armMotor.getMode() == DcMotor.RunMode.RUN_TO_POSITION){
                 bot.setArmPower(0);
             }
 
+            float yValJoyTwo = -gamepad2.right_stick_y;
+            if(Math.abs(yValJoyTwo) > .1f) {
+                bot.setArmPower(0);
+                bot.setArmMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                bot.setArmPower(0.4f * yValJoyTwo);
+            } else if (bot.armMotor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
+                bot.setArmPower(0);
+
+            }
+
+            if(toggleRBJS2.update() && bot.armMotor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+                bot.setArmMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                bot.setArmMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                armPos = ArmPos.IN;
+            }
 
             if (toggleRightBumper2.update()) {
                 shooterOn = !shooterOn;
