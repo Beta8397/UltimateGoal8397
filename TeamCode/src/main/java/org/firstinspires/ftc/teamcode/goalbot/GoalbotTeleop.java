@@ -258,9 +258,9 @@ public class GoalbotTeleop extends MecBotTeleOp {
                 autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5)));
             }
 
-            if (toggleX1.update()) {
-                adjustmode = !adjustmode;
-            }
+//            if (toggleX1.update()) {
+////                adjustmode = !adjustmode;
+////            }
             telemetry.addData("adjust mode =", adjustmode);
             telemetry.addData("auto drive mode", autoDrive != null);
             telemetry.addData("Heading", Math.toDegrees(bot.getPose().theta));

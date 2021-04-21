@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.goalbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
@@ -38,8 +39,16 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
         bot.setArmPosition(50);
         testGyroAndWaitForStart();
-        bot.setShooterPower(0.73f);
-        rings = getRings(true);
+        if(rings != Rings.FOUR){
+            bot.setShooterPower(0.74f);
+        } else{
+            bot.setShooterPower(0.76f);
+        }
+
+        ElapsedTime ringTimer = new ElapsedTime();
+        rings = getRings(false);
+        telemetry.addData("Ring time ", ringTimer.milliseconds());
+        telemetry.update();
         if(rings == Rings.FOUR) {
             driveToPosition(36, 8, X_SHOOT, Y_SHOOT, 180, 2, 1);
             turnToHeading(shootingAngle, 1, 8, 60);
@@ -53,7 +62,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setIntake(GoalBot.IntakeState.FWD);
         bot.setKickerEngaged();
         sleep(500);
-        bot.setShooterPower(0.7f);
+        bot.setShooterPower(0.72f);
         bot.setKickerUnengaged();
         sleep(500);
 //        BetaLog.d("shooter speed", bot.shooter.getVelocity());
@@ -74,7 +83,9 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setIntake(GoalBot.IntakeState.OFF);
 
         bot.setKickerUnengaged();
-        bot.setShooterPower(0.73f);
+        if(rings == Rings.ONE) {
+            bot.setShooterPower(0.73f);
+        } else bot.setShooterPower(0.74f);
         //bot.setRingKickerUnengaged();
 
         bot.setIntake(GoalBot.IntakeState.FWD);
@@ -142,20 +153,22 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             bot.setArmPosition(590);
             turnToHeading(180, 5, 8, 60);
             driveToPosition(new MotionProfile(12, 72, 36),60, 36, 180,2);
-            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 5, Y_SHOOT, shootingAngle - 5, 1);
+            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 5, Y_SHOOT + 3, shootingAngle - 2, 1);
+
+            sleep(250);
+            bot.setKickerEngaged();
+            sleep(500);
+            bot.setShooterPower(0.72f);
+            bot.setKickerUnengaged();
+            /*sleep(500);
+
 
             bot.setKickerEngaged();
             sleep(500);
-            bot.setShooterPower(0.7f);
-            bot.setKickerUnengaged();
-            sleep(500);
+            bot.setKickerUnengaged();*/
 
 
-            bot.setKickerEngaged();
-            sleep(500);
-            bot.setKickerUnengaged();
-
-            driveToPosition(new MotionProfile(8, 48, 25), 33, 33, 180, 1);
+            driveToPosition(new MotionProfile(8, 48, 25), 33, 36, 180, 1);
             turnToHeading(-170, 3,8,60);
         }
         bot.setGrabberClosed();
@@ -207,7 +220,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             x = x - 7;
             y = y + 7;
         } else {
-            x = x - 13;
+            x = x - 11;
             y = y + 5;
         }
 
@@ -235,8 +248,11 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             parkX = 78;
         }
         //drive to park.
-        if (rings == Rings.ONE || rings == Rings.FOUR) {
-            driveToPosition(36,6, parkX,parkY, -90,2,1);
+        if (rings == Rings.ONE) {
+            driveToPosition(36, 6, parkX, parkY, -90, 2, 1);
+        } else if (rings == Rings.FOUR) {
+            driveToPosition(new MotionProfile(12, 72,36),parkX, parkY, -90,1);
+
         } else {
             driveToPosition(36,6, parkX, bot.getPose().y + 3, -90,2,1);
         }
