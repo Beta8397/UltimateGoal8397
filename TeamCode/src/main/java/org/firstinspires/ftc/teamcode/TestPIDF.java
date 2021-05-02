@@ -193,6 +193,12 @@ public class TestPIDF extends LinearOpMode {
         ElapsedTime writeTimer = new ElapsedTime();
 
         while (opModeIsActive()){
+            if (toggleDpadLeft1.update()){
+                running = !running;
+                if (!running) motor.setPower(0);
+                else motor.setVelocity(targetSpeedFraction * maxTicksPerSec);
+            }
+
             try {
                 bufferedWriter.write(String.format("%f,%f", writeTimer.milliseconds(), motor.getVelocity()));
                 bufferedWriter.newLine();
