@@ -37,33 +37,33 @@ public class TestOdom extends LoggingLinearOpMode {
 
 
 
-            float armPose = bot.getArmPosition();
-            telemetry.addData("armPose", armPose);
+//            float armPose = bot.getArmPosition();
+//            telemetry.addData("armPose", armPose);
+//
+//            if(gamepad1.a){
+//                bot.armControl.update();
+//                telemetry.addData("arm updated", "");
+//            } else if(gamepad1.dpad_up){
+//                bot.armMotor.setPower(0.4);
+//                BetaLog.dd("dpad_up", "arm pos = %.1f", armPose);
+//            } else if(gamepad1.dpad_down) {
+//                bot.armMotor.setPower(-0.4);
+//                BetaLog.dd("dpad_down", "arm pos = %.1f", armPose);
+//
+//            }
+//            else {
+//                bot.armMotor.setPower(0);
+//                telemetry.addData("arm zero", "");
+//            }
+//            if(gamepad1.x){
+//                armTarget = (float)Math.max(armTarget-0.25, 0);
+//            } else if(gamepad1.b){
+//                armTarget = (float)Math.min(armTarget+0.25,200);
+//            }
+//            bot.setArmPosition(armTarget);
 
-            if(gamepad1.a){
-                bot.armControl.update();
-                telemetry.addData("arm updated", "");
-            } else if(gamepad1.dpad_up){
-                bot.armMotor.setPower(0.4);
-                BetaLog.dd("dpad_up", "arm pos = %.1f", armPose);
-            } else if(gamepad1.dpad_down) {
-                bot.armMotor.setPower(-0.4);
-                BetaLog.dd("dpad_down", "arm pos = %.1f", armPose);
-
-            }
-            else {
-                bot.armMotor.setPower(0);
-                telemetry.addData("arm zero", "");
-            }
-            if(gamepad1.x){
-                armTarget = (float)Math.max(armTarget-0.25, 0);
-            } else if(gamepad1.b){
-                armTarget = (float)Math.min(armTarget+0.25,200);
-            }
-            bot.setArmPosition(armTarget);
-
-            telemetry.addData("arm target",armTarget);
-            telemetry.addData("arm power",bot.armMotor.getPower());
+//            telemetry.addData("arm target",armTarget);
+//            telemetry.addData("arm power",bot.armMotor.getPower());
 
             float px = gamepad1.left_stick_x * 0.5f;
             float py = -gamepad1.left_stick_y * 0.5f;

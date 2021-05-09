@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.i2c.BNO055Enhanced;
@@ -17,9 +18,9 @@ public class GoalBot extends MecBot {
     public static final float GRABBER_CLOSED_POSITION = 0.8f;
     public static final float SHOOTER_POWER_NORMAL = 0.73f;
     public static final float SHOOTER_POWER_HIGH = 0.9f;
-    public static final float KICKER_ENGAGED = 0.17f;
-    public static final float KICKER_HALF_ENGAGED = 0.18f;
-    public static final float KICKER_UNENGAGED = 0.36f;
+    public static final float KICKER_ENGAGED = 0.32f;
+    public static final float KICKER_HALF_ENGAGED = 0.20f;
+    public static final float KICKER_UNENGAGED = 0.14f;
     public static final float RING_KICKER_ENGAGED = 0.4f;
     public static final float RING_KICKER_UNENGAGED = 0;
     public static final float GATE_UP = 0.9f;
@@ -61,6 +62,9 @@ public class GoalBot extends MecBot {
         shooter = hwMap.get(DcMotorEx.class, "shooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE );
+        PIDFCoefficients pidfCoefficients= new PIDFCoefficients(100, 0.13, 0, 13);
+        shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+//        shooter.setVelocityPIDFCoefficients(100, 0.13, 0, 13);
         kicker = hwMap.get(Servo.class, "kicker");
         ringKicker = hwMap.get(Servo.class, "ring kicker");
         gate = hwMap.get(Servo.class, "front_gate");

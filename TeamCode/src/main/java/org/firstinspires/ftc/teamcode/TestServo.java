@@ -11,7 +11,7 @@ public class TestServo extends LinearOpMode {
     Servo kicker;
 
     public void runOpMode() {
-        kicker = hardwareMap.get(Servo.class, "front_gate");
+        kicker = hardwareMap.get(Servo.class, "kicker");
         waitForStart();
         float pos = 0;
         while (opModeIsActive()) {

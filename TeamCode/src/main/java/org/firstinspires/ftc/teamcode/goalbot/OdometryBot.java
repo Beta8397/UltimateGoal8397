@@ -41,7 +41,7 @@ public class OdometryBot extends GoalBot{
 
     @Override
     public boolean init(HardwareMap hwMap) {
-
+        super.init(hwMap);
         List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
 
         for (LynxModule module : allHubs) {
@@ -83,21 +83,25 @@ public class OdometryBot extends GoalBot{
         leftTicks = leftCurrentTicks;
         horizTicks = horizCurrentTicks;
 
+        BetaLog.dd("ODOM", "New ticks   Left = %d   Right = %d   Horiz = %d",
+                leftNewTicks, rightNewTicks, horizNewTicks);
+
         float dyR = (FRAC_LEFT * rightNewTicks + FRAC_RIGHT * leftNewTicks) / TICKS_PER_INCH;
         float dT = (rightNewTicks - leftNewTicks) / (ROTATION_COEFF);
         float horizEncoderAngleTicks = HORIZ_TICKS_PER_RAD * dT;
         float dxR = (horizNewTicks - horizEncoderAngleTicks) / TICKS_PER_INCH;
+        BetaLog.dd("ODOM", "dT = %.1f   horizEncoderAngleTicks = %.1f", dT, horizEncoderAngleTicks);
         float avgHeading = (float) AngleUtils.normalizeRadians(pose.theta + 0.5 * dT);
-
+        BetaLog.dd("ODOM", "dxR = %.3f    dyR = %.3f", dxR, dyR);
         float dX = dxR * (float)Math.sin(avgHeading) + dyR * (float)Math.cos(avgHeading);
         float dY = -dxR * (float)Math.cos(avgHeading) + dyR * (float)Math.sin(avgHeading);
-
+        BetaLog.dd("ODOM", "dX = %.3f   dY = %.3f", dX, dY);
         /*
          * Update the Pose object with the new values for X, Y, and Heading
          */
         float heading = (float) AngleUtils.normalizeRadians(pose.theta + dT);
         pose = new Pose(pose.x + dX, pose.y + dY, heading);
-
+        BetaLog.dd("ODOM", "NewPose: x = %.3f   y = %.3f    theta = %.1f", pose.x, pose.y, Math.toDegrees(pose.theta));
         /*
          * Return the updated Pose object
          */

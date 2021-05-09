@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -73,6 +74,7 @@ public class TestPIDF extends LinearOpMode {
     public void runOpMode(){
 
         motor = hardwareMap.get(DcMotorEx.class, "motor");
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         MotorConfigurationType motorConfigurationType = motor.getMotorType();
@@ -122,7 +124,9 @@ public class TestPIDF extends LinearOpMode {
                     if (running) motor.setVelocity(targetSpeedFraction * maxTicksPerSec);
                 }
             }
-            telemetry.addData("Target Speed", " %.2f", targetSpeedFraction * maxTicksPerSec);
+
+            telemetry.addData("Target Speed", "Frac = %.4f  Abs = %.2f",
+                    targetSpeedFraction, targetSpeedFraction * maxTicksPerSec);
 
             double actualSpeed = motor.getVelocity();
             telemetry.addData("Actual Speed", " %.3f", actualSpeed);
@@ -169,7 +173,6 @@ public class TestPIDF extends LinearOpMode {
                         d, pidf.d > 0.0000001? (int)Math.floor(Math.log10(pidf.d)) : 0,
                         f, pidf.f > 0.0000001? (int)Math.floor(Math.log10(pidf.f)) : 0);
             }
-
             telemetry.addData("Path ", path);
             telemetry.addData("Temp Coeffs","'A' to set.");
             telemetry.addData("P value ", tempPIDFCoefficients.p);
