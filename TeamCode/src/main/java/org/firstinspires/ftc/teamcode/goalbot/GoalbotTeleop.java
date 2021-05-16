@@ -246,16 +246,20 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
 
             if (toggleA1.update()) {
-                bot.setPose(9, 9, 180);
+
+
+//                bot.setPose(9, 9, 180);
+
+                bot.setPose(62, 86, 180);
             }
             bot.updateOdometry();
 
             if (toggleB1.update() && autoDrive == null) {
                 autoDrive = new AutoDrive(36, 34, -162, 18, 4, 2, 6, 1, 1);
             } else if (toggleY1.update() && autoDrive == null) {
-                autoDrive = new AutoDrive(67.5f, 59f, -158, 25, 10, 2, 6, 1, 1);
+                autoDrive = new AutoDrive(68.5f, 61f, -155, 25, 10, 2, 6, 1, 1);
             } else if (toggleDpadRight1.update() && autoDrive == null ) {
-                autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5)));
+                autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(6)));
             }
 
 //            if (toggleX1.update()) {
@@ -350,7 +354,8 @@ public class GoalbotTeleop extends MecBotTeleOp {
             }
 
             float va = propCoeffHeading*thetaError;
-            if (bot.getPose().x < 15 || bot.getPose().y < 15 || Math.abs(thetaError) < toleranceRadians) {
+            if (bot.getPose().x < 15 || bot.getPose().y < 15
+                    || bot.getPose().y > 78 || Math.abs(thetaError) < toleranceRadians) {
                 va = 0;
             } else if (Math.abs(va) > VA_MAX) {
                 va = Math.signum(va) * VA_MAX;

@@ -8,6 +8,7 @@ import com.vuforia.CameraDevice;
 import org.firstinspires.ftc.teamcode.cv.VuforiaNavigator;
 import org.firstinspires.ftc.teamcode.logging.BetaLog;
 import org.firstinspires.ftc.teamcode.util.MotionProfile;
+import org.firstinspires.ftc.teamcode.util.Updatable;
 
 @Autonomous(name = "red auto3 extra both", group = "red")
 public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
@@ -16,10 +17,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
     public static final float Y0 = 37;
     public static final float X_SHOOT = 36f;
     public static final float Y_SHOOT = 34;
-    public static final float shootingAngle = -160;
-//    public static final float angle1 = -160;
-//    public static final float angle2 = -164;
-//    public static final float angle3 = -170;
+    public static final float shootingAngle = -162;
 
     GoalBot bot = new GoalBot();
 
@@ -40,9 +38,9 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setArmPosition(10);
         testGyroAndWaitForStart();
         if(rings != Rings.FOUR){
-            bot.setShooterPower(0.78f);
+            bot.setShooterPower(0.77f);
         } else{
-            bot.setShooterPower(0.78f);
+            bot.setShooterPower(0.77f);
         }
 
         ElapsedTime ringTimer = new ElapsedTime();
@@ -60,29 +58,25 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
 //        BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
         bot.setIntake(GoalBot.IntakeState.FWD);
-        bot.setKickerEngaged();
-        sleep(250);
-//        bot.setShooterPower(0.72f);
-        bot.setKickerUnengaged();
-        sleep(250);
-//        BetaLog.d("shooter speed", bot.shooter.getVelocity());
-
 
         bot.setKickerEngaged();
-        //bot.setRingKickerEngaged();
         sleep(250);
         bot.setKickerUnengaged();
-        //bot.setRingKickerEngaged();
         sleep(250);
-//        BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
-        //sleep(500);
+
+        bot.setKickerEngaged();
+        sleep(250);
+        bot.setKickerUnengaged();
+        sleep(250);
+
         bot.setKickerEngaged();
         sleep(250);
 
         bot.setIntake(GoalBot.IntakeState.OFF);
 
         bot.setKickerUnengaged();
+
         if(rings == Rings.ONE) {
             bot.setShooterPower(0.78f);
         } else bot.setShooterPower(0.78f);
@@ -131,6 +125,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         sleep(300);
         bot.setArmPosition(0);
         sleep(300);
+
         //Drive to pick up the second wobble. Turn first if needed.
         if (rings != Rings.FOUR) {
             turnToHeading(180, 5, 8, 60);
@@ -138,13 +133,12 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         }
 
 
-        //drive to pick up second wobble.
+        //drive to pick up second wobble. For FOUR rings, shoot extra rings on the way.
+
         if (rings == Rings.ZERO) {
             driveToPosition(36, 6, 35, 33.5f, 180, 2, 1);
             turnToHeading(-170, 3,8,60);
         } else if (rings == Rings.ONE) {
-//            driveToPosition(36, 6, bot.getPose().x - 24, 32, 180, 2, 6 );
-//            driveToPosition(36, 6, 36, 32, 180, 2, 1);
             driveToPosition(new MotionProfile(8, 48, 25), bot.getPose().x - 24, 36, 180, 6 );
             driveToPosition(new MotionProfile(8, 48, 25), 33, 33, 180, 1);
             turnToHeading(-170, 3,8,60);
@@ -153,12 +147,11 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             bot.setArmPosition(460);
             turnToHeading(180, 5, 8, 60);
             driveToPosition(new MotionProfile(12, 72, 36),60, 36, 180,2);
-            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 5, Y_SHOOT + 3, shootingAngle - 2, 1);
+            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 6, Y_SHOOT + 3, shootingAngle - 2, 1);
 
             sleep(250);
             bot.setKickerEngaged();
             sleep(250);
-//          bot.setShooterPower(0.72f);
             bot.setKickerUnengaged();
             sleep(250);
 
@@ -177,51 +170,37 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             sleep(250);
             bot.setKickerUnengaged();
 
+            driveToPosition(new MotionProfile(8, 48, 25), 35, 36, 180, 1);
+            turnToHeading(shootingAngle-2, 3,8,60);
 
-            driveToPosition(new MotionProfile(8, 48, 25), 33, 36, 180, 1);
-            turnToHeading(-170, 3,8,60);
+
         }
         bot.setGrabberClosed();
-        sleep(500);
+        sleep(250);
+        bot.setKickerEngaged();
+        sleep(250);
+        bot.setKickerUnengaged();
         bot.setArmPosition(400);
-        //Turn robot, then drive to drop off second wobble.
+
+        //Turn robot. If ONE ring, shoot the extra ring here.
+
         if (rings == Rings.ZERO) {
             turnToHeading(-90, 6,8, 60);
-//            turnToHeading(-90, 6, 8, 60,
-//                    new Action() {
-//                        @Override
-//                        public void update() {
-//                            float pos = bot.getArmActualPos();
-//                        }
-//                    });
+
         } else if(rings == Rings.ONE){
             driveToPosition(new MotionProfile(8, 48,25), X_SHOOT, Y_SHOOT, shootingAngle, 1f);
             turnToHeading(shootingAngle, 2f, 8, 60);
 
             bot.setKickerEngaged();
             sleep(250);
-//            bot.setShooterPower(0.7f);
             bot.setKickerUnengaged();
             BetaLog.d("shooter speed", bot.shooter.getVelocity());
 
             turnToHeading(-90, 5f, 8, 60);
         } else {
-//            driveToPosition(new MotionProfile(8, 48,25), X_SHOOT, Y_SHOOT, shootingAngle, 1f);
-//            turnToHeading(shootingAngle, 2f, 8, 60);
-//
-//            bot.setKickerEngaged();
-//            sleep(500);
-//            bot.setShooterPower(0.7f);
-//            bot.setKickerUnengaged();
-//            sleep(500);
-//
-//
-//            bot.setKickerEngaged();
-//            sleep(500);
-//            bot.setKickerUnengaged();
-
             turnToHeading(-90, 5f, 8, 60);
         }
+
         bot.setGateUp();
         if (rings == Rings.ONE) {
             x = x - 9;
@@ -234,6 +213,8 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             y = y + 5;
         }
 
+        // Drive to drop off second wobble.
+
         if(rings == Rings.ONE) {
             driveToPosition(new MotionProfile(8, 48, 25), x, y, -90, 1);
         } else if (rings == Rings.ZERO){
@@ -241,13 +222,13 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         } else {
             driveToPosition(new MotionProfile(12, 72, 36), x, y, -90, 1);
         }
-        //driveToPosition(36, 6, x, y, -90, 2, 1);
+
         bot.setArmPosition(400);
-//        sleep(400);
         bot.setGrabberOpen();
         sleep(300);
-        bot.setArmPosition(0);
+        bot.setArmPosition(-60);
         bot.setGrabberClosed();
+
         float parkY = bot.getPose().y;
         float parkX;
         if (rings == Rings.ONE) {
@@ -257,7 +238,9 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         } else {
             parkX = 78;
         }
+
         //drive to park.
+
         if (rings == Rings.ONE) {
             driveToPosition(36, 6, parkX, parkY, -90, 2, 1);
         } else if (rings == Rings.FOUR) {
@@ -268,6 +251,13 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         }
 
         bot.setShooterPower(0);
+
+        while (opModeIsActive()){
+            if (!bot.armMotor.isBusy()) {
+                bot.setArmPower(0);
+                break;
+            }
+        }
 
     }
 }
