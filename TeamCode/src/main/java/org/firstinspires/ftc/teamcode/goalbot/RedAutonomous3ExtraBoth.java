@@ -111,8 +111,8 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
 
         //Drive to drop off first wobble.
 
-        bot.setGateDown();
-        bot.setArmPosition(400);
+
+        bot.setArmPosition(450);
         if(rings == Rings.ONE) {
             driveToPosition(new MotionProfile(8, 48, 25), x, y, -90, 1);
         } else if (rings == Rings.ZERO) {
@@ -125,11 +125,12 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         sleep(300);
         bot.setArmPosition(0);
         sleep(300);
+        bot.setGateDown();
 
         //Drive to pick up the second wobble. Turn first if needed.
         if (rings != Rings.FOUR) {
             turnToHeading(180, 5, 8, 60);
-            bot.setArmPosition(460);
+            bot.setArmPosition(450);
         }
 
 
@@ -144,10 +145,10 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             turnToHeading(-170, 3,8,60);
         } else {
             driveToPosition(new MotionProfile(12, 72, 36), bot.getPose().x - 24, 36, -90, 6 );
-            bot.setArmPosition(460);
+            bot.setArmPosition(450);
             turnToHeading(180, 5, 8, 60);
             driveToPosition(new MotionProfile(12, 72, 36),60, 36, 180,2);
-            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 6, Y_SHOOT + 3, shootingAngle - 2, 1);
+            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 6, Y_SHOOT + 3, shootingAngle - 1.5f, 1);
 
             sleep(250);
             bot.setKickerEngaged();
@@ -177,10 +178,18 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         }
         bot.setGrabberClosed();
         sleep(250);
-        bot.setKickerEngaged();
+
+        if (rings == Rings.FOUR) {
+            bot.setKickerEngaged();
+        }
+
         sleep(250);
-        bot.setKickerUnengaged();
-        bot.setArmPosition(400);
+
+        if (rings == Rings.FOUR) {
+            bot.setKickerUnengaged();
+        }
+
+        bot.setArmPosition(420);
 
         //Turn robot. If ONE ring, shoot the extra ring here.
 
@@ -223,7 +232,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             driveToPosition(new MotionProfile(12, 72, 36), x, y, -90, 1);
         }
 
-        bot.setArmPosition(400);
+        bot.setArmPosition(450);
         bot.setGrabberOpen();
         sleep(300);
         bot.setArmPosition(-60);
