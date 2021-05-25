@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Test Servo", group = "test")
 public class TestServo extends LinearOpMode {
 
-    Servo front_gate;
+    Servo grabber;
 
     public void runOpMode() {
-        front_gate = hardwareMap.get(Servo.class, "front_gate");
+        grabber = hardwareMap.get(Servo.class, "grabber");
         waitForStart();
         float pos = 0;
         while (opModeIsActive()) {
@@ -27,7 +27,7 @@ public class TestServo extends LinearOpMode {
                 pos = 1;
             }
 
-            front_gate.setPosition(pos);
+            grabber.setPosition(pos);
             telemetry.addData("position", pos);
             telemetry.update();
         }

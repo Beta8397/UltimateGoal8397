@@ -259,7 +259,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
             } else if (toggleY1.update() && autoDrive == null) {
                 autoDrive = new AutoDrive(68.5f, 61f, -155, 25, 10, 2, 6, 1, 1);
             } else if (toggleDpadRight1.update() && autoDrive == null ) {
-                autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(6)));
+                autoDrive = new AutoTurn((float)AngleUtils.normalizeRadians(bot.getPose().theta - Math.toRadians(5.5f)));
             }
 
 //            if (toggleX1.update()) {

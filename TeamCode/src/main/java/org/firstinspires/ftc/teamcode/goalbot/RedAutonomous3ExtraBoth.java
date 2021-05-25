@@ -148,7 +148,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             bot.setArmPosition(450);
             turnToHeading(180, 5, 8, 60);
             driveToPosition(new MotionProfile(12, 72, 36),60, 36, 180,2);
-            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 6, Y_SHOOT + 3, shootingAngle - 1.5f, 1);
+            driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 10, Y_SHOOT + 3, shootingAngle - 1.5f, 1);
 
             sleep(250);
             bot.setKickerEngaged();
@@ -165,27 +165,41 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             bot.setKickerEngaged();
             sleep(250);
             bot.setKickerUnengaged();
-            sleep(250);
+            //sleep(250);
 
-            bot.setKickerEngaged();
-            sleep(250);
-            bot.setKickerUnengaged();
+           // bot.setKickerEngaged();
+            //sleep(250);
+            //bot.setKickerUnengaged();
 
             driveToPosition(new MotionProfile(8, 48, 25), 35, 36, 180, 1);
             turnToHeading(shootingAngle-2, 3,8,60);
 
 
         }
+//        bot.setGrabberClosed();
+//        sleep(250);
+//
+//        if (rings == Rings.FOUR) {
+//            bot.setKickerEngaged();
+//        }
+//
+//        sleep(250);
+//
+//        if (rings == Rings.FOUR) {
+//            bot.setKickerUnengaged();
+//        }
         bot.setGrabberClosed();
-        sleep(250);
-
         if (rings == Rings.FOUR) {
             bot.setKickerEngaged();
         }
-
         sleep(250);
-
         if (rings == Rings.FOUR) {
+            bot.setKickerUnengaged();
+        }
+        sleep(250);
+        if (rings == Rings.FOUR) {
+            bot.setKickerEngaged();
+            sleep(250);
             bot.setKickerUnengaged();
         }
 
