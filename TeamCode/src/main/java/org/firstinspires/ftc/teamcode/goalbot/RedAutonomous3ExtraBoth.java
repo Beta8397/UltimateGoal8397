@@ -38,9 +38,9 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setArmPosition(10);
         testGyroAndWaitForStart();
         if(rings != Rings.FOUR){
-            bot.setShooterPower(0.77f);
+            bot.setShooterPower(0.78f);
         } else{
-            bot.setShooterPower(0.77f);
+            bot.setShooterPower(0.78f);
         }
 
         ElapsedTime ringTimer = new ElapsedTime();
@@ -111,10 +111,22 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
 
         //Drive to drop off first wobble.
 
-
-        bot.setArmPosition(450);
+        if (rings != Rings.ONE) {
+            bot.setArmPosition(450);
+        }
         if(rings == Rings.ONE) {
-            driveToPosition(new MotionProfile(8, 48, 25), x, y, -90, 1);
+            driveToPosition(new MotionProfile(8, 48, 25), x, y,
+                    -90, 1, new Updatable() {
+                        boolean armOut = false;
+                        double xStart = bot.getPose().x;
+                        @Override
+                        public void update() {
+                            if (!armOut && bot.getPose().x > xStart + 12) {
+                               bot.setArmPosition(450);
+                               armOut = true;
+                            }
+                        }
+                    });
         } else if (rings == Rings.ZERO) {
             driveToPosition(36,6,x,y,-90,2,1);
         } else {
@@ -137,7 +149,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         //drive to pick up second wobble. For FOUR rings, shoot extra rings on the way.
 
         if (rings == Rings.ZERO) {
-            driveToPosition(36, 6, 35, 33.5f, 180, 2, 1);
+            driveToPosition(36, 6, 35, 34.5f, 180, 2, 1);
             turnToHeading(-170, 3,8,60);
         } else if (rings == Rings.ONE) {
             driveToPosition(new MotionProfile(8, 48, 25), bot.getPose().x - 24, 36, 180, 6 );
@@ -267,7 +279,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         if (rings == Rings.ONE) {
             driveToPosition(36, 6, parkX, parkY, -90, 2, 1);
         } else if (rings == Rings.FOUR) {
-            driveToPosition(new MotionProfile(72, 72,36),parkX + 2, parkY, -90,1);
+            driveToPosition(new MotionProfile(72, 72,36),parkX - 2, parkY, -90,1);
 
         } else {
             driveToPosition(36,6, parkX, bot.getPose().y + 3, -90,2,1);

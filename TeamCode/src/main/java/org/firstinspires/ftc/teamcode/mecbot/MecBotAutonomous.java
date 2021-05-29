@@ -449,6 +449,7 @@ public abstract class MecBotAutonomous extends LoggingLinearOpMode {
             float thetaError = (float)AngleUtils.normalizeRadians(headingTargetRadians - bot.getPose().theta);
 
             if(d1 < tolerance) break;
+            action.update();
 
             float sinTheta = (float)Math.sin(bot.getPose().theta);
             float cosTheta = (float)Math.cos(bot.getPose().theta);
