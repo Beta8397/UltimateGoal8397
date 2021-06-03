@@ -18,6 +18,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
     public static final float X_SHOOT = 36f;
     public static final float Y_SHOOT = 34;
     public static final float shootingAngle = -162;
+    public static final float SHOOTER_POWER = 0.785f;
 
     GoalBot bot = new GoalBot();
 
@@ -37,11 +38,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setArmMode(DcMotor.RunMode.RUN_TO_POSITION);
         bot.setArmPosition(10);
         testGyroAndWaitForStart();
-        if(rings != Rings.FOUR){
-            bot.setShooterPower(0.78f);
-        } else{
-            bot.setShooterPower(0.78f);
-        }
+        bot.setShooterPower(SHOOTER_POWER);
 
         ElapsedTime ringTimer = new ElapsedTime();
         rings = getRings(false);
@@ -78,8 +75,8 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setKickerUnengaged();
 
         if(rings == Rings.ONE) {
-            bot.setShooterPower(0.78f);
-        } else bot.setShooterPower(0.78f);
+            bot.setShooterPower(SHOOTER_POWER);
+        } else bot.setShooterPower(SHOOTER_POWER);
         //bot.setRingKickerUnengaged();
 
         bot.setIntake(GoalBot.IntakeState.FWD);
@@ -112,7 +109,8 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         //Drive to drop off first wobble.
 
         if (rings != Rings.ONE) {
-            bot.setArmPosition(450);
+            bot.setArmPosition(430);   //Was 450.
+
         }
         if(rings == Rings.ONE) {
             driveToPosition(new MotionProfile(8, 48, 25), x, y,
@@ -122,7 +120,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
                         @Override
                         public void update() {
                             if (!armOut && bot.getPose().x > xStart + 12) {
-                               bot.setArmPosition(450);
+                               bot.setArmPosition(430);   //Was 450.
                                armOut = true;
                             }
                         }
@@ -183,7 +181,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             //sleep(250);
             //bot.setKickerUnengaged();
 
-            driveToPosition(new MotionProfile(8, 48, 25), 35, 36, 180, 1);
+            driveToPosition(new MotionProfile(8, 48, 25), 34, 36, shootingAngle - 7, 1);
             turnToHeading(shootingAngle-2, 3,8,60);
 
 
@@ -239,13 +237,13 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         bot.setGateUp();
         if (rings == Rings.ONE) {
             x = x - 9;
-            y = y + 7;
+            y = y + 5;
         } else if (rings == Rings.ZERO) {
             x = x - 7;
-            y = y + 7;
+            y = y + 5;
         } else {
             x = x - 11;
-            y = y + 5;
+            y = y + 4;
         }
 
         // Drive to drop off second wobble.
