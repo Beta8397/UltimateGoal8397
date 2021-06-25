@@ -109,7 +109,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         //Drive to drop off first wobble.
 
         if (rings != Rings.ONE) {
-            bot.setArmPosition(430);   //Was 450.
+            bot.setArmPosition(450);   //Was 450.
 
         }
         if(rings == Rings.ONE) {
@@ -120,7 +120,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
                         @Override
                         public void update() {
                             if (!armOut && bot.getPose().x > xStart + 12) {
-                               bot.setArmPosition(430);   //Was 450.
+                               bot.setArmPosition(450);   //Was 450.
                                armOut = true;
                             }
                         }
@@ -140,7 +140,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
         //Drive to pick up the second wobble. Turn first if needed.
         if (rings != Rings.FOUR) {
             turnToHeading(180, 5, 8, 60);
-            bot.setArmPosition(450);
+            bot.setArmPosition(485);
         }
 
 
@@ -155,7 +155,7 @@ public class RedAutonomous3ExtraBoth extends GoalBotAutonomous {
             turnToHeading(-170, 3,8,60);
         } else {
             driveToPosition(new MotionProfile(12, 72, 36), bot.getPose().x - 24, 36, -90, 6 );
-            bot.setArmPosition(450);
+            bot.setArmPosition(475);  //was 450
             turnToHeading(180, 5, 8, 60);
             driveToPosition(new MotionProfile(12, 72, 36),60, 36, 180,2);
             driveToPosition(new MotionProfile(8, 16, 25), X_SHOOT + 10, Y_SHOOT + 3, shootingAngle - 1.5f, 1);

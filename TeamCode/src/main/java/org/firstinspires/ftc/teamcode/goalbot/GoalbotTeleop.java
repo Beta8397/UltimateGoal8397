@@ -85,12 +85,12 @@ public class GoalbotTeleop extends MecBotTeleOp {
             return gamepad1.b;
         }
     };
-    ButtonToggle toggleX1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
-        @Override
-        protected boolean getButtonState() {
-            return gamepad1.x;
-        }
-    };
+//    ButtonToggle toggleX1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
+//        @Override
+//        protected boolean getButtonState() {
+//            return gamepad1.x;
+//        }
+//    };
     ButtonToggle toggleY1 = new ButtonToggle(ButtonToggle.Mode.PRESSED) {
         @Override
         protected boolean getButtonState() {
@@ -169,7 +169,7 @@ public class GoalbotTeleop extends MecBotTeleOp {
 
                 armStateChange = false;
                 int armTarget = armPos == ArmPos.OUT ? 590 :
-                        armPos == ArmPos.UP ? 300 : 80;
+                        armPos == ArmPos.UP ? 280 : 80;     //was 300
                 bot.setArmPosition(armTarget);
             }
             if(armPos == ArmPos.IN && bot.getArmActualPos() < 100 && bot.armMotor.getMode() == DcMotor.RunMode.RUN_TO_POSITION){

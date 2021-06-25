@@ -131,7 +131,7 @@ public class RedAutonomous3ExtraShot extends GoalBotAutonomous {
         if (rings != Rings.FOUR) {
             turnToHeading(180, 5, 8, 60);
         }
-        bot.setArmPosition(460);          //Was 590
+        bot.setArmPosition(485);          //Was 590
         //drive to pick up second wobble.
         if (rings == Rings.ZERO) {
             driveToPosition(36, 6, 35, 33.5f, 180, 2, 1);

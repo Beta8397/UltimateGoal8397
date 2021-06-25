@@ -120,6 +120,52 @@ public abstract class MecBotAutonomous extends LoggingLinearOpMode {
         bot.setDrivePower(0, 0, 0);
     }
 
+    /**
+     * Turn to the specified heading using proportionate control
+     *
+     * @param targetHeadingDegrees
+     * @param toleranceDegrees
+     * @param propCoeff
+     */
+    public void turnToHeadingPD(float targetHeadingDegrees, float toleranceDegrees,
+                              float propCoeff, float derivCoeff, float maxDegreesPerSec) {
+        float targetHeadingRadians = targetHeadingDegrees * (float) Math.PI / 180;
+        float toleranceRadians = toleranceDegrees * (float) Math.PI / 180;
+        float maxRadiansPerSec = maxDegreesPerSec * (float)Math.PI/180;
+        float priorHeading = bot.getHeadingRadians();
+        ElapsedTime et = new ElapsedTime();
+        while (opModeIsActive()) {
+            bot.updateOdometry();
+            float currentHeading = bot.getPose().theta;
+            /*
+             * Normalized difference between target heading and current heading
+             */
+            float angleDiff = (float) AngleUtils.normalizeRadians(targetHeadingRadians - currentHeading);
+            float turnSpeed = 0;
+            /*
+             * Only check for completion if we believe we have a new reading from gyro. Assume a new reading
+             * if: current reading is different from old one OR more than 50 ms has elapsed since the last
+             * (assumed) new reading. After the test for completion, reset the timer and update priorHeading.
+             */
+            if (currentHeading != priorHeading || et.milliseconds() > 50) {
+                float headingChange = (float) AngleUtils.normalizeRadians(currentHeading - priorHeading);
+                if (Math.abs(angleDiff) < toleranceRadians && Math.abs(headingChange) < toleranceRadians / 5) {
+                    break;
+                } else {
+                    turnSpeed = headingChange/ (float) et.milliseconds();
+                    et.reset();
+                    priorHeading = currentHeading;
+                }
+            }
+            float va = propCoeff * angleDiff - derivCoeff * turnSpeed;
+            if (Math.abs(va) > maxRadiansPerSec){
+                va = (float)Math.signum(va) * maxRadiansPerSec;
+            }
+            bot.setDriveSpeed(0, 0, va);
+        }
+        bot.setDrivePower(0, 0, 0);
+    }
+
     public void turnToHeading(float targetHeadingDegrees, float toleranceDegrees,
                               float propCoeff, float maxDegreesPerSec, Updatable action) {
         float targetHeadingRadians = targetHeadingDegrees * (float) Math.PI / 180;
