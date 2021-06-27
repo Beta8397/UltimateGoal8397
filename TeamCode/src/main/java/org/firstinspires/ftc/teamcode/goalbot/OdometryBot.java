@@ -25,11 +25,11 @@ public class OdometryBot extends GoalBot{
     Encoder rightEncoder = null;
     Encoder leftEncoder = null;
     Encoder horizEncoder = null;
-    public static final float TICKS_PER_INCH = 1865f; //was 1875.4
-    public static final float HORIZ_TICKS_PER_RAD = 4056f; //was 4008
-    public static final float ROTATION_COEFF = 26767f; // was 26695
-    public static final float FRAC_LEFT = 0.503f; // was 0.507
-    public static final float FRAC_RIGHT = 0.497f; // was 0.493
+    public static final float TICKS_PER_INCH = 1882.3f; //was 1875.4
+    public static final float HORIZ_TICKS_PER_RAD = 4530.2f; //was 4008
+    public static final float ROTATION_COEFF = 26919.5f; // was 26695
+    public static final float FRAC_LEFT = 0.5012f; // was 0.507
+    public static final float FRAC_RIGHT = 0.4988f; // was 0.493
     public int rightTicks, leftTicks, horizTicks;
 
     BNO055Enhanced armIMU = null;
