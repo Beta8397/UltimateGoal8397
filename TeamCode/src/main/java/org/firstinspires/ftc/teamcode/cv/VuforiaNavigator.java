@@ -281,6 +281,38 @@ public class VuforiaNavigator {
         }
     }
 
+    public static int[][] testWebcam
+            (BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue) {
+        VuforiaLocalizer.CloseableFrame frame = null;
+        VuforiaLocalizer.CloseableFrame tempFrame = null;
+        Image img = null;
+        try {
+            //We want the most recent available frame, which necessitates this while loop. If no frame is available, return false.
+            while (true) {
+                tempFrame = frameQueue.poll();
+                if (tempFrame == null) break;
+                if (frame != null) frame.close();
+                frame = tempFrame;
+            }
+            if (frame == null) return null;
+
+
+            //Iterate through the images in the frame to find one that satisfies the width, height, and pixel format requirements
+            long numImages = frame.getNumImages();
+            int[][] result = new int[(int)numImages][3];
+            for (int i = 0; i < numImages; i++) {
+                img = frame.getImage(i);
+                result[i][0] = img.getFormat();
+                result[i][1] = img.getWidth();
+                result[i][2] = img.getHeight();
+            }
+            return result;
+        } finally {
+            if (frame != null) frame.close();
+            if (tempFrame != null) tempFrame.close();
+        }
+    }
+
     /**
      * Turn flashlight on or off
      *

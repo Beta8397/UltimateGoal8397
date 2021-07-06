@@ -18,5 +18,7 @@ public class TurnFast extends MecBotAutonomous {
         bot.setPose(0,0,0);
         waitForStart();
         turnToHeadingPD(90,2,12,300,90);
+        sleep(1000);
+        turnToHeading(0,2,12,90);
     }
 }
