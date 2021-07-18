@@ -1,26 +1,24 @@
 package org.firstinspires.ftc.teamcode.mecbot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.i2c.BNO055Enhanced;
-import org.firstinspires.ftc.teamcode.util.Pose;
 import org.firstinspires.ftc.teamcode.util.AngleUtils;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.util.Pose;
 
 /**
  * The MechBot class represents a mecanum-wheeled robot with a BNO055IMU and a color sensor. It has methods
  * that provide the basic functionality of such a robot
  */
-public class MecBot {
+public class TestMecBot {
 
     /*
      * Constants
@@ -53,12 +51,12 @@ public class MecBot {
     /*
      * The heading offset (this gives us flexibility in specifying the world coordinate system).
      */
-    private float headingOffsetRadians = 0;
+//    private float headingOffsetRadians = 0;
 
     /*
      * The current pose of the robot
      */
-    protected Pose pose = new Pose(0, 0, 0);
+//    protected Pose pose = new Pose(0, 0, 0);
 
     /*
      * The most recent previous readings of the drive motor ticks
@@ -94,7 +92,7 @@ public class MecBot {
      * @param axesMap       Axes Map for the BNO055Enhanced
      * @param axesSign      Axes Sign for the BNO055Enhanced
      */
-    public MecBot(MotorType mType, float w, float l, float wheelDiam, float rollerAngle, float gearRatio, BNO055Enhanced.AxesMap axesMap, BNO055Enhanced.AxesSign axesSign){
+    public TestMecBot(MotorType mType, float w, float l, float wheelDiam, float rollerAngle, float gearRatio, BNO055Enhanced.AxesMap axesMap, BNO055Enhanced.AxesSign axesSign){
         MOTOR_TYPE = mType;
         TAN_ALPHA = (float)Math.tan(Math.toRadians(rollerAngle));
         WL_AVG = 0.5f*w + 0.5f*l/TAN_ALPHA;
@@ -108,7 +106,7 @@ public class MecBot {
     /**
      *  No-argument constructor:  USE THIS ONE FOR THE SIMULATOR!!
      */
-    public MecBot(){
+    public TestMecBot(){
         MOTOR_TYPE = MotorType.NeverestOrbital20;
         TAN_ALPHA = 1;
         WL_AVG = 15;
@@ -171,9 +169,9 @@ public class MecBot {
      * Return current robot position and orientation as a Pose object
      * @return robot pose
      */
-    public Pose getPose() {
-        return pose;
-    }
+//    public Pose getPose() {
+//        return pose;
+//    }
 
     /*
      * Methods that provide access to the individual motors, mainly needed for diagnostics
@@ -187,32 +185,32 @@ public class MecBot {
      * Obtain the current robot heading using the IMU (note use of the heading offset)
      * @return heading in radians
      */
-    public float getHeadingRadians(){
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        return headingOffsetRadians + orientation.firstAngle;
-    }
+//    public float getHeadingRadians(){
+//        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+//        return headingOffsetRadians + orientation.firstAngle;
+//    }
 
     /**
      * Set the robot's heading to the specified value, in degrees. Store this heading in the Pose object, adjust the
      * headingOffsetRadians value as necessary, and update the tick readings of the drive motors.
      * @param headingDegrees
      */
-    public void setHeadingDegrees(float headingDegrees){
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        headingOffsetRadians = (float)Math.toRadians(headingDegrees) - orientation.firstAngle;
-        pose = new Pose(pose.x, pose.y, (float)Math.toRadians(headingDegrees));
-        updateTicks();
-    }
+//    public void setHeadingDegrees(float headingDegrees){
+//        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+//        headingOffsetRadians = (float)Math.toRadians(headingDegrees) - orientation.firstAngle;
+//        pose = new Pose(pose.x, pose.y, (float)Math.toRadians(headingDegrees));
+//        updateTicks();
+//    }
 
-    public void setPose(float x, float y, float headingDegrees){
-        pose = new Pose(x, y, pose.theta);
-        setHeadingDegrees(headingDegrees);
-    }
+//    public void setPose(float x, float y, float headingDegrees){
+//        pose = new Pose(x, y, pose.theta);
+//        setHeadingDegrees(headingDegrees);
+//    }
 
-    public void setPose(float x, float y){
-        pose = new Pose(x, y, pose.theta);
-        updateTicks();
-    }
+//    public void setPose(float x, float y){
+//        pose = new Pose(x, y, pose.theta);
+//        updateTicks();
+//    }
 
     /**
      * Update the tick readings of the drive motors.
@@ -267,77 +265,77 @@ public class MecBot {
      * gyro-assisted odometry algorithm.
      * @return
      */
-    public Pose updateOdometry(){
-        /*
-         * Obtain new heading using the IMU. Then calculate the (small) interval change in the heading, as well as
-         * the average heading during the (small) interval of time since the previous iteration. Note the use of the
-         * AngleUtils.normalizeRadians method to keep angles in the -PI to +PI range.
-         */
-        float heading = getHeadingRadians();
-        float headingChange = (float)AngleUtils.normalizeRadians(heading - pose.theta);
-        float avgHeading = (float)AngleUtils.normalizeRadians(pose.theta + 0.5 * headingChange);
-
-        /*
-         * Get the current drive motor ticks
-         */
-        int currBL = backLeft.getCurrentPosition();
-        int currFL = frontLeft.getCurrentPosition();
-        int currFR = frontRight.getCurrentPosition();
-        int currBR = backRight.getCurrentPosition();
-
-        /*
-         * Calculate the NEW ticks that have occurred since the previous update (new = current - previous)
-         */
-        int newBL = currBL - ticksBL;
-        int newFL = currFL - ticksFL;
-        int newFR = currFR - ticksFR;
-        int newBR = currBR - ticksBR;
-
-        /*
-         * Update the fields that store the tick values, so they will be ready for the next iteration.
-         */
-        ticksBL = currBL;
-        ticksFL = currFL;
-        ticksFR = currFR;
-        ticksBR = currBR;
-
-        /*
-         * Determine the distance that the surface of each wheel has rolled.
-         *
-         * NOTE: Analysis of DIMENSIONS can be helpful in getting this right. We want to get from "new ticks" to
-         * "inches of travel".
-         *
-         * newBL has dimensions of ticks, and TICKS_PER_ROTATION has dimensions of ticks/rotation.
-         * So (newBL / TICKS_PER_ROTATION) has dimensions of Rotations.
-         * WHEEL_CIRCUMFERENCE has dimensions of inches/rotation.
-         * So (newBL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE has dimensions of  inches.
-         *
-         */
-        float sBL = (newBL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-        float sFL = (newFL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-        float sFR = (newFR / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-        float sBR = (newBR / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-
-        /*
-         * Determine small increment of robot motion in ROBOT COORDINATE SYSTEM
-         */
-        float dXR = 0.25f * (-sBL + sFL - sFR + sBR) * TAN_ALPHA;
-        float dYR = 0.25f * (sBL + sFL + sFR + sBR);
-
-        /*
-         * Convert this small increment of robot motion into WORLD COORDINATES
-         */
-        float dX = dXR * (float)Math.sin(avgHeading) + dYR * (float)Math.cos(avgHeading);
-        float dY = -dXR * (float)Math.cos(avgHeading) + dYR * (float)Math.sin(avgHeading);
-
-        /*
-         * Update the Pose object with the new values for X, Y, and Heading
-         */
-        pose = new Pose(pose.x + dX, pose.y + dY, heading);
-
-        /*
-         * Return the updated Pose object
-         */
-        return pose;
-    }
+//    public Pose updateOdometry(){
+//        /*
+//         * Obtain new heading using the IMU. Then calculate the (small) interval change in the heading, as well as
+//         * the average heading during the (small) interval of time since the previous iteration. Note the use of the
+//         * AngleUtils.normalizeRadians method to keep angles in the -PI to +PI range.
+//         */
+//        float heading = getHeadingRadians();
+//        float headingChange = (float)AngleUtils.normalizeRadians(heading - pose.theta);
+//        float avgHeading = (float)AngleUtils.normalizeRadians(pose.theta + 0.5 * headingChange);
+//
+//        /*
+//         * Get the current drive motor ticks
+//         */
+//        int currBL = backLeft.getCurrentPosition();
+//        int currFL = frontLeft.getCurrentPosition();
+//        int currFR = frontRight.getCurrentPosition();
+//        int currBR = backRight.getCurrentPosition();
+//
+//        /*
+//         * Calculate the NEW ticks that have occurred since the previous update (new = current - previous)
+//         */
+//        int newBL = currBL - ticksBL;
+//        int newFL = currFL - ticksFL;
+//        int newFR = currFR - ticksFR;
+//        int newBR = currBR - ticksBR;
+//
+//        /*
+//         * Update the fields that store the tick values, so they will be ready for the next iteration.
+//         */
+//        ticksBL = currBL;
+//        ticksFL = currFL;
+//        ticksFR = currFR;
+//        ticksBR = currBR;
+//
+//        /*
+//         * Determine the distance that the surface of each wheel has rolled.
+//         *
+//         * NOTE: Analysis of DIMENSIONS can be helpful in getting this right. We want to get from "new ticks" to
+//         * "inches of travel".
+//         *
+//         * newBL has dimensions of ticks, and TICKS_PER_ROTATION has dimensions of ticks/rotation.
+//         * So (newBL / TICKS_PER_ROTATION) has dimensions of Rotations.
+//         * WHEEL_CIRCUMFERENCE has dimensions of inches/rotation.
+//         * So (newBL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE has dimensions of  inches.
+//         *
+//         */
+//        float sBL = (newBL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+//        float sFL = (newFL / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+//        float sFR = (newFR / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+//        float sBR = (newBR / TICKS_PER_ROTATION) * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+//
+//        /*
+//         * Determine small increment of robot motion in ROBOT COORDINATE SYSTEM
+//         */
+//        float dXR = 0.25f * (-sBL + sFL - sFR + sBR) * TAN_ALPHA;
+//        float dYR = 0.25f * (sBL + sFL + sFR + sBR);
+//
+//        /*
+//         * Convert this small increment of robot motion into WORLD COORDINATES
+//         */
+//        float dX = dXR * (float)Math.sin(avgHeading) + dYR * (float)Math.cos(avgHeading);
+//        float dY = -dXR * (float)Math.cos(avgHeading) + dYR * (float)Math.sin(avgHeading);
+//
+//        /*
+//         * Update the Pose object with the new values for X, Y, and Heading
+//         */
+//        pose = new Pose(pose.x + dX, pose.y + dY, heading);
+//
+//        /*
+//         * Return the updated Pose object
+//         */
+//        return pose;
+//    }
 }
